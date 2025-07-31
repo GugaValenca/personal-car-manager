@@ -35,7 +35,7 @@ A comprehensive vehicle management system built with Django and Python for track
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/personal-car-manager.git
+   git clone https://github.com/gugavalenca/personal-car-manager.git
    cd personal-car-manager
    ```
 
@@ -180,7 +180,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Gustavo Valenca**
 - GitHub: [@GugaTampa](https://github.com/gugatampa)
-- LinkedIn: [Seu LinkedIn](https://linkedin.com/in/gugavalenca)
+- LinkedIn: [@GugaValenca](https://linkedin.com/in/gugavalenca)
 - Email: gustavo_valenca@hotmail.com
 
 ## 🙏 Acknowledgments
