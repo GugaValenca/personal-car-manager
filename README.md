@@ -1,195 +1,94 @@
-# 🚗 Personal Car Manager
+# Personal Car Manager
 
-A comprehensive vehicle management system built with Django and Python for tracking cars, maintenance records, and expenses.
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django-4.2-092E20?logo=django&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-Ready-000000?logo=vercel&logoColor=white)
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
-![Django](https://img.shields.io/badge/Django-4.2-green.svg)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.1-purple.svg)
-![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+Simple Django app to manage cars, maintenance history, and vehicle-related expenses in one place.
 
-## 📋 Features
+## Live Demo + Repository Links
+- Live Demo (Vercel): https://personal-car-manager.vercel.app
+- Production URL: https://personal-car-manager-39n0p06uu-gugavalencas-projects.vercel.app
+- Repository: https://github.com/gugavalenca/personal-car-manager
 
-- **Vehicle Management**: Track multiple vehicles with detailed information
-- **Maintenance Records**: Log service history with dates, costs, and providers
-- **Expense Tracking**: Monitor fuel, insurance, and other vehicle-related costs
-- **Dashboard Analytics**: View statistics and recent activities
-- **Admin Interface**: Full CRUD operations through Django admin
-- **Responsive Design**: Mobile-friendly interface with Bootstrap
+## Overview
+Personal Car Manager is a realistic fullstack portfolio project focused on common daily workflows:
+- Registering vehicles
+- Monitoring maintenance records
+- Tracking expenses by car
+- Viewing simple dashboard totals
 
-## 🛠 Technologies Used
+The project uses Django templates and server-rendered pages for a clean and interview-friendly architecture.
 
-- **Backend**: Python 3.8+, Django 4.2
-- **Frontend**: HTML5, CSS3, Bootstrap 5, Font Awesome
-- **Database**: SQLite (Development), PostgreSQL (Production Ready)
-- **Tools**: Git, VSCode
+## Features
+- User-based car ownership (each user sees only their own cars)
+- Car list and detail views
+- Maintenance listing with cost and mileage
+- Expense listing by type and amount
+- Dashboard with totals for cars, maintenances, and expenses
 
-## 🚀 Quick Start
+## Screenshots
+- Add screenshots in `docs/screenshots/` and reference them here:
+- `Home page`
+- `Dashboard`
+- `Car detail`
 
-### Prerequisites
+## Tech Stack
+- Backend: Python, Django 4.2
+- Frontend: Django Templates, Bootstrap 5
+- Database: SQLite (default development database)
+- Deployment: Vercel (`vercel.json` configured)
 
-- Python 3.8 or higher
-- pip (Python package installer)
-- Git
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/gugavalenca/personal-car-manager.git
-   cd personal-car-manager
-   ```
-
-2. **Create virtual environment**
-   ```bash
-   python -m venv venv
-   
-   # Windows
-   venv\Scripts\activate
-   
-   # macOS/Linux
-   source venv/bin/activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Run migrations**
-   ```bash
-   python manage.py makemigrations
-   python manage.py migrate
-   ```
-
-5. **Create superuser**
-   ```bash
-   python manage.py createsuperuser
-   ```
-
-6. **Start development server**
-   ```bash
-   python manage.py runserver
-   ```
-
-7. **Access the application**
-   - Homepage: http://127.0.0.1:8000/
-   - Admin Panel: http://127.0.0.1:8000/admin/
-   - Dashboard: http://127.0.0.1:8000/dashboard/
-
-## 📱 Screenshots
-
-### Dashboard
-- Overview of all vehicles and statistics
-- Recent maintenance and expense records
-- Quick action buttons
-
-### Vehicle Management
-- Add/edit vehicle information
-- Track multiple cars with detailed specs
-- American market car makes and models
-
-### Maintenance Tracking
-- Log service records with dates and costs
-- Track service providers and mileage
-- Maintenance history per vehicle
-
-## 🗂 Project Structure
-
+## Installation
+```bash
+git clone https://github.com/gugavalenca/personal-car-manager.git
+cd personal-car-manager
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py createsuperuser
 ```
+
+## Usage
+```bash
+python manage.py runserver
+```
+
+Then open:
+- `http://127.0.0.1:8000/`
+- `http://127.0.0.1:8000/admin/` (to add sample records quickly)
+
+## Project Structure
+```text
 personal-car-manager/
-├── car_manager/          # Django project settings
-├── cars/                 # Main application
-│   ├── models.py        # Database models
-│   ├── views.py         # Application views
-│   ├── admin.py         # Admin configuration
-│   └── urls.py          # URL patterns
-├── templates/           # HTML templates
-│   └── cars/           # App-specific templates
-├── static/             # CSS, JS, images
-├── media/              # User uploads
-├── requirements.txt    # Python dependencies
-└── manage.py          # Django management script
+|-- car_manager/          # Django project settings and root URLs
+|-- cars/                 # Domain app: models, views, URLs, tests
+|-- templates/cars/       # Server-rendered HTML templates
+|-- static/               # Static assets
+|-- manage.py
+|-- requirements.txt
+`-- vercel.json           # Vercel deployment config
 ```
 
-## 💾 Database Schema
+## Technical Highlights / What I Learned
+- Building owner-scoped queries with `request.user`
+- Creating practical route tests for permissions and regressions
+- Structuring Django templates for list/detail pages
+- Preparing Django settings for local and cloud environments using environment variables
 
-### Models
+## Future Improvements
+- Add create/edit forms outside Django Admin
+- Add filters (date range, expense type, car make/model)
+- Add pagination for maintenance and expense lists
+- Add screenshot assets and UI polish
 
-- **Car**: Vehicle information (make, model, year, etc.)
-- **Maintenance**: Service records and history
-- **Expense**: Financial tracking for vehicle costs
+## Contributing
+Contributions are welcome. Open an issue to discuss improvements before submitting a pull request.
 
-### Relationships
+## License
+This project is currently unlicensed. Add a `LICENSE` file if you want to define usage terms.
 
-- User → Cars (One-to-Many)
-- Car → Maintenances (One-to-Many)
-- Car → Expenses (One-to-Many)
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env` file for production settings:
-
-```env
-SECRET_KEY=your-secret-key
-DEBUG=False
-ALLOWED_HOSTS=yourdomain.com
-DATABASE_URL=your-database-url
-```
-
-### Database
-
-For production, configure PostgreSQL in `settings.py`:
-
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'your_db_name',
-        'USER': 'your_db_user',
-        'PASSWORD': 'your_db_password',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-```
-
-## 🚀 Deployment
-
-This application is ready for deployment on:
-
-- **Heroku**: Include `Procfile` and `runtime.txt`
-- **Railway**: Direct deployment from GitHub
-- **DigitalOcean**: App Platform deployment
-- **AWS**: Elastic Beanstalk or EC2
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-**Gustavo Valenca**
-- GitHub: [@GugaTampa](https://github.com/gugatampa)
-- LinkedIn: [@GugaValenca](https://linkedin.com/in/gugavalenca)
-- Email: gustavo_valenca@hotmail.com
-
-## 🙏 Acknowledgments
-
-- Django Documentation
-- Bootstrap Team
-- Font Awesome Icons
-- Python Community
-
----
-
-⭐ **Star this repository if you found it helpful!**
+## Contact
+- GitHub: https://github.com/gugavalenca
