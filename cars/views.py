@@ -1,10 +1,15 @@
+import json
 from pathlib import Path
 
 from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.db.models import Sum
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from .models import Car, Maintenance, Expense, FuelRecord, Trip
 from .forms import CarForm, ExpenseForm, FuelRecordForm, TripForm
 
@@ -35,6 +40,54 @@ def frontend_asset(request, filename):
     return FileResponse(
         open(file_path, "rb"),
         content_type=content_types.get(file_path.suffix.lower(), "application/octet-stream"),
+    )
+
+
+@csrf_exempt
+@require_POST
+def frontend_login(request):
+    """Lightweight login endpoint used by SPA login card."""
+    try:
+        payload = json.loads(request.body.decode("utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return JsonResponse({"ok": False, "error": "Invalid request body."}, status=400)
+
+    username = (payload.get("username") or "").strip()
+    password = payload.get("password") or ""
+    if not username or not password:
+        return JsonResponse({"ok": False, "error": "Username and password are required."}, status=400)
+
+    user = authenticate(request, username=username, password=password)
+    if user is None:
+        return JsonResponse({"ok": False, "error": "Invalid username or password."}, status=401)
+
+    login(request, user)
+    return JsonResponse({"ok": True, "redirect": "/dashboard/"})
+
+
+def signup(request):
+    """Simple signup flow for non-admin users."""
+    if request.user.is_authenticated:
+        return redirect("cars:dashboard")
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Account created successfully.")
+            return redirect("cars:dashboard")
+    else:
+        form = UserCreationForm()
+
+    return render(
+        request,
+        "cars/signup.html",
+        {
+            "form": form,
+            "title": "Create Account",
+            "subtitle": "Create a user account to access your vehicle dashboard.",
+        },
     )
 
 

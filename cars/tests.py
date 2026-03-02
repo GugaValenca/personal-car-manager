@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+import json
 
 from .models import Car, Expense, FuelRecord, Maintenance, Trip
 
@@ -111,3 +112,25 @@ class CarViewsTests(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertTrue(Car.objects.filter(owner=self.user, license_plate="NEW-2022").exists())
+
+    def test_frontend_login_endpoint_authenticates_user(self):
+        response = self.client.post(
+            reverse("cars:frontend_login"),
+            data=json.dumps({"username": "owner", "password": "testpass123"}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertTrue(payload["ok"])
+
+    def test_signup_page_creates_user(self):
+        response = self.client.post(
+            reverse("cars:signup"),
+            {
+                "username": "new_user",
+                "password1": "StrongPass12345",
+                "password2": "StrongPass12345",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(User.objects.filter(username="new_user").exists())

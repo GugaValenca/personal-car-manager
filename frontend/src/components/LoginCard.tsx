@@ -3,6 +3,36 @@ import { Eye, EyeOff, LogIn } from "lucide-react";
 
 const LoginCard = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("/auth/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "Invalid credentials.");
+      }
+
+      window.location.href = data.redirect || "/dashboard/";
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to sign in.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="glass-card p-8 md:p-10">
@@ -13,17 +43,26 @@ const LoginCard = () => {
         </p>
       </div>
 
-      <form onSubmit={(e) => e.preventDefault()} className="space-y-5" style={{ fontFamily: "Inter, sans-serif" }}>
+      {error ? (
+        <div className="mb-4 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive-foreground">
+          {error}
+        </div>
+      ) : null}
+
+      <form onSubmit={handleSubmit} className="space-y-5" style={{ fontFamily: "Inter, sans-serif" }}>
         <div>
           <label htmlFor="email" className="mb-1.5 block text-xs font-medium text-secondary-foreground">
             Email Address
           </label>
           <input
             id="email"
-            type="email"
+            type="text"
             placeholder="you@example.com"
             className="input-glass"
-            autoComplete="email"
+            autoComplete="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
 
@@ -38,6 +77,9 @@ const LoginCard = () => {
               placeholder="••••••••"
               className="input-glass pr-11"
               autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
             <button
               type="button"
@@ -55,14 +97,18 @@ const LoginCard = () => {
             <input type="checkbox" className="h-3.5 w-3.5 rounded border-border accent-primary" />
             Remember me
           </label>
-          <a href="#" className="text-primary hover:text-primary/80 transition-colors font-medium">
+          <a href="/admin/password_reset/" className="text-primary hover:text-primary/80 transition-colors font-medium">
             Forgot password?
           </a>
         </div>
 
-        <button type="submit" className="btn-primary flex items-center justify-center gap-2 mt-2">
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-primary flex items-center justify-center gap-2 mt-2 disabled:opacity-70"
+        >
           <LogIn className="h-4 w-4" />
-          Sign In
+          {loading ? "Signing in..." : "Sign In"}
         </button>
       </form>
 
@@ -79,7 +125,7 @@ const LoginCard = () => {
 
       <p className="text-center text-sm text-muted-foreground" style={{ fontFamily: "Inter, sans-serif" }}>
         Don&apos;t have an account?{" "}
-        <a href="#" className="font-medium text-primary hover:text-primary/80 transition-colors">
+        <a href="/signup/" className="font-medium text-primary hover:text-primary/80 transition-colors">
           Create one
         </a>
       </p>

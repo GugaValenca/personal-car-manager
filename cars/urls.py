@@ -5,6 +5,8 @@ app_name = 'cars'
 
 urlpatterns = [
     path("assets/<path:filename>", views.frontend_asset, name="frontend_asset"),
+    path("auth/login/", views.frontend_login, name="frontend_login"),
+    path("signup/", views.signup, name="signup"),
     path('', views.home, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path("api/dashboard/", views.dashboard_api, name="dashboard_api"),
