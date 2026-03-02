@@ -13,6 +13,8 @@
     <div class="row g-3">
       <div class="col-md-6">
         <p class="mb-1"><strong>License Plate:</strong> {{ car.license_plate }}</p>
+        <p class="mb-1"><strong>Usage Type:</strong> {{ car.get_usage_type_display }}</p>
+        <p class="mb-1"><strong>Fleet:</strong> {{ car.fleet_name|default:"-" }}</p>
         <p class="mb-1"><strong>Color:</strong> {{ car.color }}</p>
         <p class="mb-0"><strong>Fuel Type:</strong> {{ car.get_fuel_type_display }}</p>
       </div>

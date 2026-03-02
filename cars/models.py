@@ -9,6 +9,13 @@ class Car(models.Model):
         ('hybrid', 'Hybrid'),
         ('electric', 'Electric'),
     ]
+    USAGE_CHOICES = [
+        ("personal", "Personal"),
+        ("taxi", "Taxi"),
+        ("fleet", "Fleet"),
+        ("delivery", "Delivery"),
+        ("other", "Other"),
+    ]
 
     # Principais marcas do mercado americano
     MAKE_CHOICES = [
@@ -172,6 +179,14 @@ class Car(models.Model):
         max_length=20, verbose_name="License Plate")
     fuel_type = models.CharField(
         max_length=20, choices=FUEL_CHOICES, verbose_name="Fuel Type")
+    usage_type = models.CharField(
+        max_length=20,
+        choices=USAGE_CHOICES,
+        default="personal",
+        verbose_name="Usage Type",
+    )
+    fleet_name = models.CharField(max_length=120, blank=True, verbose_name="Fleet Name")
+    is_active = models.BooleanField(default=True, verbose_name="Active")
     current_mileage = models.IntegerField(verbose_name="Current Mileage")
     notes = models.TextField(blank=True, verbose_name="Notes")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -233,3 +248,67 @@ class Expense(models.Model):
 
     def __str__(self):
         return f"{self.car} - {self.description} (${self.amount})"
+
+
+class FuelRecord(models.Model):
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name="fuel_records")
+    date = models.DateField(verbose_name="Date")
+    odometer = models.IntegerField(verbose_name="Odometer")
+    liters = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Liters")
+    price_per_liter = models.DecimalField(
+        max_digits=8, decimal_places=2, verbose_name="Price per Liter ($)"
+    )
+    total_cost = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name="Total Cost ($)"
+    )
+    full_tank = models.BooleanField(default=True, verbose_name="Full Tank")
+    station_name = models.CharField(max_length=120, blank=True, verbose_name="Station")
+    notes = models.TextField(blank=True, verbose_name="Notes")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-date", "-created_at"]
+
+    def save(self, *args, **kwargs):
+        self.total_cost = self.total_cost or (self.liters * self.price_per_liter)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.car} - Fuel on {self.date} (${self.total_cost})"
+
+
+class Trip(models.Model):
+    TRIP_TYPE_CHOICES = [
+        ("personal", "Personal"),
+        ("taxi", "Taxi"),
+        ("delivery", "Delivery"),
+        ("ride_share", "Ride Share"),
+        ("other", "Other"),
+    ]
+
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name="trips")
+    date = models.DateField(verbose_name="Date")
+    start_mileage = models.IntegerField(verbose_name="Start Mileage")
+    end_mileage = models.IntegerField(verbose_name="End Mileage")
+    distance_km = models.IntegerField(default=0, verbose_name="Distance (km)")
+    income = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0, verbose_name="Income ($)"
+    )
+    trip_type = models.CharField(
+        max_length=20, choices=TRIP_TYPE_CHOICES, default="personal", verbose_name="Trip Type"
+    )
+    passengers = models.PositiveSmallIntegerField(
+        null=True, blank=True, verbose_name="Passengers"
+    )
+    notes = models.TextField(blank=True, verbose_name="Notes")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-date", "-created_at"]
+
+    def save(self, *args, **kwargs):
+        self.distance_km = max(self.end_mileage - self.start_mileage, 0)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.car} - {self.trip_type} on {self.date}"

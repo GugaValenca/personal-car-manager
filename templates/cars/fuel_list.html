@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Fuel Records | Personal Car Manager{% endblock %}
+
+{% block content %}
+<section class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4 animate-rise">
+  <div>
+    <h1 class="display-6 mb-1">Fuel Records</h1>
+    <p class="muted mb-0">Track fuel cost and efficiency for each vehicle.</p>
+  </div>
+  <a href="/admin/cars/fuelrecord/add/" class="btn btn-cta">Add Fuel Record</a>
+</section>
+
+<section class="app-panel p-3 p-lg-4 animate-rise">
+  {% if fuel_records %}
+  <div class="table-responsive">
+    <table class="table table-app align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Car</th>
+          <th>Date</th>
+          <th>Liters</th>
+          <th>Price/L</th>
+          <th>Total</th>
+          <th>Odometer</th>
+          <th>Station</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in fuel_records %}
+        <tr>
+          <td>
+            <a href="{% url 'cars:car_detail' record.car.pk %}">
+              {{ record.car.year }} {{ record.car.get_make_display }} {{ record.car.get_model_display }}
+            </a>
+          </td>
+          <td>{{ record.date }}</td>
+          <td>{{ record.liters }}</td>
+          <td>${{ record.price_per_liter }}</td>
+          <td>${{ record.total_cost }}</td>
+          <td>{{ record.odometer }}</td>
+          <td>{{ record.station_name|default:"-" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="muted mb-0">No fuel records found.</p>
+  {% endif %}
+</section>
+{% endblock %}

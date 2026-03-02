@@ -2,10 +2,12 @@
 
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-4.2-092E20?logo=django&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=000)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-Ready-000000?logo=vercel&logoColor=white)
 
-Simple Django app to manage cars, maintenance history, and vehicle-related expenses in one place.
+Fullstack car management platform with Django backend plus Lovable React frontend for personal cars, taxi operation, and fleet cost control.
 
 ## Live Demo + Repository Links
 - Live Demo (Vercel): https://personal-car-manager.vercel.app
@@ -17,16 +19,27 @@ Personal Car Manager is a realistic fullstack portfolio project focused on commo
 - Registering vehicles
 - Monitoring maintenance records
 - Tracking expenses by car
-- Viewing simple dashboard totals
+- Logging fuel records and trip operation data
+- Measuring income vs. cost for taxi and fleet scenarios
 
-The project uses Django templates and server-rendered pages for a clean and interview-friendly architecture.
+The project now includes:
+- Django web interface for secure operations and admin workflows
+- JSON API endpoints for frontend integration
+- Lovable-generated React frontend in `frontend/` connected to backend data
 
 ## Features
 - User-based car ownership (each user sees only their own cars)
 - Car list and detail views
 - Maintenance listing with cost and mileage
 - Expense listing by type and amount
-- Dashboard with totals for cars, maintenances, and expenses
+- Fuel records with liters, unit price, odometer and station
+- Trip records with type, distance, passengers and income
+- Dashboard with operational KPIs:
+- total fuel cost
+- trip distance
+- trip income
+- net balance (income - maintenance - expenses - fuel)
+- API endpoint for frontend consumption: `/api/dashboard/`
 
 ## Screenshots
 - Add screenshots in `docs/screenshots/` and reference them here:
@@ -36,7 +49,8 @@ The project uses Django templates and server-rendered pages for a clean and inte
 
 ## Tech Stack
 - Backend: Python, Django 4.2
-- Frontend: Django Templates, Bootstrap 5
+- Frontend (server-rendered): Django Templates, Bootstrap 5
+- Frontend (SPA): React, TypeScript, Vite, Tailwind (Lovable export)
 - Database: SQLite (default development database)
 - Deployment: Vercel (`vercel.json` configured)
 
@@ -51,6 +65,12 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
+Optional frontend setup:
+```bash
+cd frontend
+npm install
+```
+
 ## Usage
 ```bash
 python manage.py runserver
@@ -60,11 +80,21 @@ Then open:
 - `http://127.0.0.1:8000/`
 - `http://127.0.0.1:8000/admin/` (to add sample records quickly)
 
+Frontend development (Lovable app):
+```bash
+cd frontend
+npm run dev
+```
+
+By default, the frontend consumes backend metrics from:
+- `http://127.0.0.1:8000/api/dashboard/`
+
 ## Project Structure
 ```text
 personal-car-manager/
 |-- car_manager/          # Django project settings and root URLs
 |-- cars/                 # Domain app: models, views, URLs, tests
+|-- frontend/             # Lovable React frontend integrated into this repo
 |-- templates/cars/       # Server-rendered HTML templates
 |-- static/               # Static assets
 |-- manage.py
@@ -75,14 +105,16 @@ personal-car-manager/
 ## Technical Highlights / What I Learned
 - Building owner-scoped queries with `request.user`
 - Creating practical route tests for permissions and regressions
-- Structuring Django templates for list/detail pages
+- Designing a hybrid architecture (Django + React frontend)
+- Structuring APIs for dashboard metrics and operational summaries
+- Modeling data for personal and fleet scenarios (fuel + trips + income)
 - Preparing Django settings for local and cloud environments using environment variables
 
 ## Future Improvements
-- Add create/edit forms outside Django Admin
-- Add filters (date range, expense type, car make/model)
-- Add pagination for maintenance and expense lists
-- Add screenshot assets and UI polish
+- Add role-based access (owner, driver, fleet manager)
+- Add recurring costs and monthly budget alerts
+- Add CSV export and PDF reports for accounting
+- Add frontend auth flow with token/session refresh
 
 ## Contributing
 Contributions are welcome. Open an issue to discuss improvements before submitting a pull request.

@@ -1,7 +1,8 @@
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
-from .models import Car, Maintenance, Expense
+from .models import Car, Maintenance, Expense, FuelRecord, Trip
 
 
 def home(request):
@@ -21,19 +22,43 @@ def dashboard(request):
     total_expenses = Expense.objects.filter(car__owner=request.user).aggregate(
         total=Sum('amount')
     )['total'] or 0
+    total_maintenance_cost = Maintenance.objects.filter(car__owner=request.user).aggregate(
+        total=Sum("cost")
+    )["total"] or 0
+    total_fuel_cost = FuelRecord.objects.filter(car__owner=request.user).aggregate(
+        total=Sum("total_cost")
+    )["total"] or 0
+    total_trip_income = Trip.objects.filter(car__owner=request.user).aggregate(
+        total=Sum("income")
+    )["total"] or 0
+    total_trip_distance = Trip.objects.filter(car__owner=request.user).aggregate(
+        total=Sum("distance_km")
+    )["total"] or 0
+    net_balance = total_trip_income - (
+        total_expenses + total_maintenance_cost + total_fuel_cost
+    )
 
     # Recent activities
     recent_maintenances = Maintenance.objects.filter(
         car__owner=request.user)[:5]
     recent_expenses = Expense.objects.filter(car__owner=request.user)[:5]
+    recent_fuel_records = FuelRecord.objects.filter(car__owner=request.user)[:5]
+    recent_trips = Trip.objects.filter(car__owner=request.user)[:5]
 
     context = {
         'total_cars': total_cars,
         'total_maintenances': total_maintenances,
         'total_expenses': total_expenses,
+        "total_maintenance_cost": total_maintenance_cost,
+        "total_fuel_cost": total_fuel_cost,
+        "total_trip_income": total_trip_income,
+        "total_trip_distance": total_trip_distance,
+        "net_balance": net_balance,
         'user_cars': user_cars,
         'recent_maintenances': recent_maintenances,
         'recent_expenses': recent_expenses,
+        "recent_fuel_records": recent_fuel_records,
+        "recent_trips": recent_trips,
     }
     return render(request, 'cars/dashboard.html', context)
 
@@ -84,3 +109,84 @@ def expense_list(request):
     """List all user's expenses"""
     expenses = Expense.objects.filter(car__owner=request.user)
     return render(request, 'cars/expense_list.html', {'expenses': expenses})
+
+
+@login_required
+def fuel_list(request):
+    """List all user's fuel records"""
+    fuel_records = FuelRecord.objects.filter(car__owner=request.user)
+    return render(request, "cars/fuel_list.html", {"fuel_records": fuel_records})
+
+
+@login_required
+def trip_list(request):
+    """List all user's trips"""
+    trips = Trip.objects.filter(car__owner=request.user)
+    return render(request, "cars/trip_list.html", {"trips": trips})
+
+
+@login_required
+def dashboard_api(request):
+    """JSON endpoint for Lovable frontend integration"""
+    user_cars = Car.objects.filter(owner=request.user)
+    total_expenses = Expense.objects.filter(car__owner=request.user).aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+    total_maintenance_cost = Maintenance.objects.filter(car__owner=request.user).aggregate(
+        total=Sum("cost")
+    )["total"] or 0
+    total_fuel_cost = FuelRecord.objects.filter(car__owner=request.user).aggregate(
+        total=Sum("total_cost")
+    )["total"] or 0
+    total_trip_income = Trip.objects.filter(car__owner=request.user).aggregate(
+        total=Sum("income")
+    )["total"] or 0
+    total_trip_distance = Trip.objects.filter(car__owner=request.user).aggregate(
+        total=Sum("distance_km")
+    )["total"] or 0
+
+    data = {
+        "summary": {
+            "total_cars": user_cars.count(),
+            "total_expenses": float(total_expenses),
+            "total_maintenance_cost": float(total_maintenance_cost),
+            "total_fuel_cost": float(total_fuel_cost),
+            "total_trip_income": float(total_trip_income),
+            "total_trip_distance": int(total_trip_distance),
+            "net_balance": float(
+                total_trip_income - (total_expenses + total_maintenance_cost + total_fuel_cost)
+            ),
+        },
+        "cars": [
+            {
+                "id": car.id,
+                "label": str(car),
+                "usage_type": car.usage_type,
+                "fleet_name": car.fleet_name,
+                "current_mileage": car.current_mileage,
+                "is_active": car.is_active,
+            }
+            for car in user_cars[:10]
+        ],
+        "recent_expenses": [
+            {
+                "car": str(expense.car),
+                "description": expense.description,
+                "amount": float(expense.amount),
+                "date": expense.date.isoformat(),
+                "type": expense.expense_type,
+            }
+            for expense in Expense.objects.filter(car__owner=request.user)[:10]
+        ],
+        "recent_trips": [
+            {
+                "car": str(trip.car),
+                "trip_type": trip.trip_type,
+                "distance_km": trip.distance_km,
+                "income": float(trip.income),
+                "date": trip.date.isoformat(),
+            }
+            for trip in Trip.objects.filter(car__owner=request.user)[:10]
+        ],
+    }
+    return JsonResponse(data)

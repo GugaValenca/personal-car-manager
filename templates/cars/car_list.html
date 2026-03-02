@@ -18,6 +18,7 @@
       <p class="muted mb-1">{{ car.year }}</p>
       <h2 class="h4 mb-3">{{ car.get_make_display }} {{ car.get_model_display }}</h2>
       <p class="mb-1"><strong>Plate:</strong> {{ car.license_plate }}</p>
+      <p class="mb-1"><strong>Usage:</strong> {{ car.get_usage_type_display }}</p>
       <p class="mb-1"><strong>Color:</strong> {{ car.color }}</p>
       <p class="mb-3"><strong>Mileage:</strong> {{ car.current_mileage }} miles</p>
       <a href="{% url 'cars:car_detail' car.pk %}" class="btn btn-outline-light btn-sm">

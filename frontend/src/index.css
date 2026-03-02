@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 7%;
+    --foreground: 210 20% 92%;
+
+    --card: 220 15% 12%;
+    --card-foreground: 210 20% 92%;
+
+    --popover: 220 15% 12%;
+    --popover-foreground: 210 20% 92%;
+
+    --primary: 160 55% 42%;
+    --primary-foreground: 220 20% 7%;
+
+    --secondary: 220 10% 18%;
+    --secondary-foreground: 210 20% 85%;
+
+    --muted: 220 12% 16%;
+    --muted-foreground: 215 15% 55%;
+
+    --accent: 175 50% 40%;
+    --accent-foreground: 220 20% 7%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 10% 22%;
+    --input: 220 10% 20%;
+    --ring: 160 55% 42%;
+
+    --radius: 0.75rem;
+
+    /* Custom tokens */
+    --glass-bg: 220 15% 12%;
+    --glass-border: 210 15% 30%;
+    --glass-glow: 160 55% 42%;
+    --silver: 220 10% 70%;
+    --graphite: 220 8% 35%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply relative overflow-hidden rounded-2xl;
+    background: hsl(var(--glass-bg) / 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid hsl(var(--glass-border) / 0.3);
+    box-shadow:
+      0 8px 32px hsl(220 20% 4% / 0.5),
+      inset 0 1px 0 hsl(210 15% 40% / 0.1);
+  }
+
+  .input-glass {
+    @apply w-full rounded-lg px-4 py-3 text-sm transition-all duration-200 outline-none;
+    background: hsl(var(--input) / 0.5);
+    border: 1px solid hsl(var(--glass-border) / 0.25);
+    color: hsl(var(--foreground));
+  }
+
+  .input-glass::placeholder {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .input-glass:focus {
+    border-color: hsl(var(--primary) / 0.6);
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.12), 0 0 20px hsl(var(--primary) / 0.06);
+  }
+
+  .btn-primary {
+    @apply w-full rounded-lg py-3 px-6 font-semibold text-sm tracking-wide transition-all duration-300;
+    background: linear-gradient(135deg, hsl(160 55% 38%), hsl(175 50% 36%));
+    color: hsl(0 0% 100%);
+    box-shadow: 0 4px 15px hsl(160 55% 30% / 0.3);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, hsl(160 55% 44%), hsl(175 50% 42%));
+    box-shadow: 0 6px 25px hsl(160 55% 30% / 0.45);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s ease-out forwards;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft 0.8s ease-out forwards;
+}
+
+.animate-delay-100 { animation-delay: 0.1s; opacity: 0; }
+.animate-delay-200 { animation-delay: 0.2s; opacity: 0; }
+.animate-delay-300 { animation-delay: 0.3s; opacity: 0; }
+.animate-delay-400 { animation-delay: 0.4s; opacity: 0; }
+.animate-delay-500 { animation-delay: 0.5s; opacity: 0; }

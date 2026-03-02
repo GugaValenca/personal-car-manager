@@ -9,41 +9,50 @@
 </section>
 
 <section class="row g-3 mb-4 animate-rise">
-  <div class="col-md-4">
+  <div class="col-md-3">
     <div class="data-card p-3">
       <p class="muted mb-1">Total Cars</p>
       <h2 class="display-6 mb-1">{{ total_cars }}</h2>
       <a class="text-info" href="{% url 'cars:car_list' %}">Open list</a>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-3">
     <div class="data-card p-3">
       <p class="muted mb-1">Maintenances</p>
       <h2 class="display-6 mb-1">{{ total_maintenances }}</h2>
       <a class="text-info" href="{% url 'cars:maintenance_list' %}">View records</a>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-3">
     <div class="data-card p-3">
       <p class="muted mb-1">Total Expenses</p>
       <h2 class="display-6 mb-1">${{ total_expenses|default:"0.00" }}</h2>
       <a class="text-info" href="{% url 'cars:expense_list' %}">View expenses</a>
     </div>
   </div>
+  <div class="col-md-3">
+    <div class="data-card p-3">
+      <p class="muted mb-1">Fuel Cost</p>
+      <h2 class="display-6 mb-1">${{ total_fuel_cost|default:"0.00" }}</h2>
+      <a class="text-info" href="{% url 'cars:fuel_list' %}">View fuel logs</a>
+    </div>
+  </div>
 </section>
 
 <section class="row g-3 mb-4 animate-rise">
-  <div class="col-lg-6">
+  <div class="col-lg-4">
     <div class="app-panel p-4 h-100">
       <h3 class="h4 mb-3">Quick Actions</h3>
       <div class="d-flex flex-wrap gap-2">
         <a href="/admin/cars/car/add/" class="btn btn-cta">Add Car</a>
         <a href="/admin/cars/maintenance/add/" class="btn btn-outline-light">Add Maintenance</a>
         <a href="/admin/cars/expense/add/" class="btn btn-outline-light">Add Expense</a>
+        <a href="/admin/cars/fuelrecord/add/" class="btn btn-outline-light">Add Fuel Record</a>
+        <a href="/admin/cars/trip/add/" class="btn btn-outline-light">Add Trip</a>
       </div>
     </div>
   </div>
-  <div class="col-lg-6">
+  <div class="col-lg-4">
     <div class="app-panel p-4 h-100">
       <h3 class="h4 mb-3">Your Fleet</h3>
       {% if user_cars %}
@@ -61,10 +70,24 @@
       {% endif %}
     </div>
   </div>
+  <div class="col-lg-4">
+    <div class="app-panel p-4 h-100">
+      <h3 class="h4 mb-3">Operation Summary</h3>
+      <p class="mb-2"><span class="muted">Trip Income:</span> ${{ total_trip_income|default:"0.00" }}</p>
+      <p class="mb-2"><span class="muted">Trip Distance:</span> {{ total_trip_distance|default:"0" }} km</p>
+      <p class="mb-2"><span class="muted">Maintenance Cost:</span> ${{ total_maintenance_cost|default:"0.00" }}</p>
+      <p class="mb-0">
+        <span class="muted">Net Balance:</span>
+        <strong class="{% if net_balance >= 0 %}text-success{% else %}text-danger{% endif %}">
+          ${{ net_balance|default:"0.00" }}
+        </strong>
+      </p>
+    </div>
+  </div>
 </section>
 
 <section class="row g-3 animate-rise">
-  <div class="col-lg-6">
+  <div class="col-lg-4">
     <div class="app-panel p-4 h-100">
       <h3 class="h4 mb-3">Recent Maintenances</h3>
       {% if recent_maintenances %}
@@ -81,7 +104,7 @@
       {% endif %}
     </div>
   </div>
-  <div class="col-lg-6">
+  <div class="col-lg-4">
     <div class="app-panel p-4 h-100">
       <h3 class="h4 mb-3">Recent Expenses</h3>
       {% if recent_expenses %}
@@ -95,6 +118,23 @@
       </ul>
       {% else %}
       <p class="muted mb-0">No expense activity yet.</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="app-panel p-4 h-100">
+      <h3 class="h4 mb-3">Recent Trips</h3>
+      {% if recent_trips %}
+      <ul class="list-unstyled mb-0">
+        {% for item in recent_trips %}
+        <li class="mb-2">
+          {{ item.date }} - {{ item.get_trip_type_display }}
+          <span class="muted">({{ item.distance_km }} km / ${{ item.income }})</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="muted mb-0">No trip activity yet.</p>
       {% endif %}
     </div>
   </div>
