@@ -158,17 +158,18 @@ h5 {
 }
 
 .login-card {
-  width: min(980px, 100%);
+  width: min(1010px, 100%);
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.38);
   box-shadow: 0 32px 70px rgba(5, 12, 28, 0.38);
 }
 
 .login-hero {
   position: relative;
-  padding: 2.25rem;
+  padding: 2.5rem 2.4rem;
   color: #fff;
   background:
     linear-gradient(180deg, rgba(6, 20, 48, 0.52), rgba(6, 20, 48, 0.88)),
@@ -193,6 +194,7 @@ h5 {
 .login-hero p {
   max-width: 38ch;
   color: #d8e5ff;
+  line-height: 1.6;
 }
 
 .hero-chip {
@@ -203,24 +205,29 @@ h5 {
   border: 1px solid rgba(255, 255, 255, 0.42);
   font-size: 0.8rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .login-form {
   background: #ffffff;
-  padding: 2.2rem 2rem;
+  padding: 2.4rem 2.15rem;
   color: var(--text);
+  border-left: 1px solid #e4ebfa;
 }
 
 .login-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   font-weight: 700;
+  letter-spacing: 0.08em;
   color: #193e96;
-  margin-bottom: 0.1rem;
+  margin-bottom: 0.45rem;
 }
 
 .login-sub {
   color: var(--muted);
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.35rem;
 }
 
 .login-form .form-label {
@@ -231,6 +238,12 @@ h5 {
 
 .login-form .form-control {
   background: #f8fbff;
+  min-height: 46px;
+  padding-left: 0.85rem;
+}
+
+.login-form .form-control:hover {
+  border-color: #b5c7ea;
 }
 
 .login-form .form-control:focus {
@@ -239,6 +252,10 @@ h5 {
 
 .login-form .form-check-input {
   border-color: #9eb1d8;
+}
+
+.login-form a {
+  color: #255edb;
 }
 
 .social-list {
@@ -282,6 +299,17 @@ h5 {
 
 .btn-social i {
   width: 20px;
+}
+
+.login-form .btn-cta {
+  min-height: 48px;
+  font-size: 0.98rem;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(28, 85, 216, 0.26);
+}
+
+.login-form .btn-cta:hover {
+  transform: translateY(-1px);
 }
 
 @keyframes rise-in {
