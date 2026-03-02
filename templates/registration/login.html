@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Login | Personal Car Manager{% endblock %}
+{% block body_class %}app-body{% endblock %}
+
+{% block navigation %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<section class="login-shell">
+  <div class="login-card animate-rise">
+    <aside class="login-hero">
+      <p class="text-uppercase fw-semibold mb-2">Welcome Back</p>
+      <h1 class="display-6 mb-3">Drive smarter with your complete car history.</h1>
+      <p class="mb-4">
+        Centralize vehicle data, maintenance timelines, and expense tracking in one practical workspace.
+      </p>
+      <ul class="list-unstyled mb-4">
+        <li class="mb-2"><i class="fas fa-check-circle me-2 text-info"></i>Simple and focused dashboard</li>
+        <li class="mb-2"><i class="fas fa-check-circle me-2 text-info"></i>Maintenance and expense visibility</li>
+        <li><i class="fas fa-check-circle me-2 text-info"></i>Fast access to your fleet details</li>
+      </ul>
+      <div class="social-list">
+        <a class="social-item" href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a class="social-item" href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a class="social-item" href="#" aria-label="Google"><i class="fab fa-google"></i></a>
+      </div>
+    </aside>
+
+    <div class="login-form">
+      <p class="text-uppercase muted fw-semibold mb-1">Personal Car Manager</p>
+      <h2 class="h2 mb-4">Login Account</h2>
+
+      {% if form.errors %}
+      <div class="alert alert-danger py-2">
+        Invalid username or password. Please try again.
+      </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="id_username" class="form-label">Username</label>
+          <input
+            type="text"
+            name="username"
+            autofocus
+            autocapitalize="none"
+            autocomplete="username"
+            maxlength="150"
+            required
+            id="id_username"
+            class="form-control"
+            placeholder="your_username"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="id_password" class="form-label">Password</label>
+          <input
+            type="password"
+            name="password"
+            autocomplete="current-password"
+            required
+            id="id_password"
+            class="form-control"
+            placeholder="Enter password"
+          />
+        </div>
+
+        {% if next %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        {% endif %}
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="rememberMe" />
+            <label class="form-check-label muted" for="rememberMe">Remember me</label>
+          </div>
+          <a href="/admin/password_reset/" class="small text-info">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-cta w-100">Sign In</button>
+      </form>
+      <p class="small muted mt-3 mb-0">
+        No account yet? Create one quickly from <a class="text-info" href="/admin/">admin panel</a>.
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

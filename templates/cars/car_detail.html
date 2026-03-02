@@ -1,91 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ car.year }} {{ car.get_make_display }} {{ car.get_model_display }} - Personal Car Manager</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body class="bg-light">
-    <div class="container py-4">
-      <a href="{% url 'cars:car_list' %}" class="btn btn-outline-secondary mb-3">Back to Cars</a>
+{% extends 'base.html' %}
 
-      <div class="card mb-4">
-        <div class="card-body">
-          <h1 class="h3 mb-3">{{ car.year }} {{ car.get_make_display }} {{ car.get_model_display }}</h1>
-          <p class="mb-1"><strong>License Plate:</strong> {{ car.license_plate }}</p>
-          <p class="mb-1"><strong>Color:</strong> {{ car.color }}</p>
-          <p class="mb-1"><strong>Fuel Type:</strong> {{ car.get_fuel_type_display }}</p>
-          <p class="mb-0"><strong>Current Mileage:</strong> {{ car.current_mileage }} miles</p>
-        </div>
+{% block title %}Car Detail | Personal Car Manager{% endblock %}
+
+{% block content %}
+<section class="mb-3 animate-rise">
+  <a href="{% url 'cars:car_list' %}" class="btn btn-outline-light btn-sm mb-3">
+    Back to Cars
+  </a>
+  <div class="app-panel p-4">
+    <p class="muted mb-1">{{ car.year }}</p>
+    <h1 class="display-6 mb-3">{{ car.get_make_display }} {{ car.get_model_display }}</h1>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <p class="mb-1"><strong>License Plate:</strong> {{ car.license_plate }}</p>
+        <p class="mb-1"><strong>Color:</strong> {{ car.color }}</p>
+        <p class="mb-0"><strong>Fuel Type:</strong> {{ car.get_fuel_type_display }}</p>
       </div>
-
-      <div class="row">
-        <div class="col-md-4 mb-3">
-          <div class="card h-100">
-            <div class="card-body">
-              <h2 class="h6 text-muted">Maintenance Cost</h2>
-              <p class="h4 mb-0">${{ total_maintenance_cost|default:"0.00" }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3">
-          <div class="card h-100">
-            <div class="card-body">
-              <h2 class="h6 text-muted">Expenses Cost</h2>
-              <p class="h4 mb-0">${{ total_expense_cost|default:"0.00" }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3">
-          <div class="card h-100">
-            <div class="card-body">
-              <h2 class="h6 text-muted">Total Cost</h2>
-              <p class="h4 mb-0">${{ total_cost|default:"0.00" }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row mt-3">
-        <div class="col-md-6 mb-4">
-          <div class="card h-100">
-            <div class="card-header">
-              <h2 class="h6 mb-0">Recent Maintenances</h2>
-            </div>
-            <ul class="list-group list-group-flush">
-              {% for maintenance in maintenances %}
-              <li class="list-group-item">
-                <strong>{{ maintenance.service_name }}</strong><br />
-                <small class="text-muted">{{ maintenance.service_date }} - ${{ maintenance.cost }}</small>
-              </li>
-              {% empty %}
-              <li class="list-group-item text-muted">No maintenance records yet.</li>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-6 mb-4">
-          <div class="card h-100">
-            <div class="card-header">
-              <h2 class="h6 mb-0">Recent Expenses</h2>
-            </div>
-            <ul class="list-group list-group-flush">
-              {% for expense in expenses %}
-              <li class="list-group-item">
-                <strong>{{ expense.description }}</strong><br />
-                <small class="text-muted">{{ expense.date }} - ${{ expense.amount }}</small>
-              </li>
-              {% empty %}
-              <li class="list-group-item text-muted">No expenses recorded yet.</li>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
+      <div class="col-md-6">
+        <p class="mb-1"><strong>Current Mileage:</strong> {{ car.current_mileage }} miles</p>
+        <p class="mb-0"><strong>Notes:</strong> {{ car.notes|default:"No notes added." }}</p>
       </div>
     </div>
-  </body>
-</html>
+  </div>
+</section>
+
+<section class="row g-3 mb-3 animate-rise">
+  <div class="col-md-4">
+    <div class="data-card p-3">
+      <p class="muted mb-1">Maintenance Cost</p>
+      <h2 class="h3 mb-0">${{ total_maintenance_cost|default:"0.00" }}</h2>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="data-card p-3">
+      <p class="muted mb-1">Expenses Cost</p>
+      <h2 class="h3 mb-0">${{ total_expense_cost|default:"0.00" }}</h2>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="data-card p-3">
+      <p class="muted mb-1">Total Cost</p>
+      <h2 class="h3 mb-0">${{ total_cost|default:"0.00" }}</h2>
+    </div>
+  </div>
+</section>
+
+<section class="row g-3 animate-rise">
+  <div class="col-lg-6">
+    <div class="app-panel p-4 h-100">
+      <h2 class="h4 mb-3">Recent Maintenances</h2>
+      {% if maintenances %}
+      <ul class="list-unstyled mb-0">
+        {% for maintenance in maintenances %}
+        <li class="mb-2">
+          {{ maintenance.service_date }} - {{ maintenance.service_name }}
+          <span class="muted">(${{ maintenance.cost }})</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="muted mb-0">No maintenance records yet.</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="app-panel p-4 h-100">
+      <h2 class="h4 mb-3">Recent Expenses</h2>
+      {% if expenses %}
+      <ul class="list-unstyled mb-0">
+        {% for expense in expenses %}
+        <li class="mb-2">
+          {{ expense.date }} - {{ expense.description }}
+          <span class="muted">(${{ expense.amount }})</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="muted mb-0">No expenses recorded yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

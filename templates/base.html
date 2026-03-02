@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Personal Car Manager{% endblock %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}" />
+  </head>
+  <body class="{% block body_class %}app-body{% endblock %}">
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    {% block navigation %}
+    <nav class="navbar navbar-expand-lg navbar-dark app-navbar">
+      <div class="container">
+        <a class="navbar-brand brand-title" href="{% url 'cars:home' %}">
+          <i class="fas fa-car-side me-2"></i>Personal Car Manager
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#appNavbar"
+          aria-controls="appNavbar"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="appNavbar">
+          <div class="navbar-nav ms-auto gap-lg-2">
+            <a class="nav-link" href="{% url 'cars:home' %}">Home</a>
+            {% if user.is_authenticated %}
+            <a class="nav-link" href="{% url 'cars:dashboard' %}">Dashboard</a>
+            <a class="nav-link" href="{% url 'cars:car_list' %}">Cars</a>
+            <a class="nav-link" href="{% url 'cars:maintenance_list' %}">Maintenances</a>
+            <a class="nav-link" href="{% url 'cars:expense_list' %}">Expenses</a>
+            <a class="nav-link" href="/admin/">Admin</a>
+            <form class="d-inline" method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button class="btn btn-sm btn-outline-light ms-lg-2" type="submit">
+                Logout
+              </button>
+            </form>
+            {% else %}
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+            <a class="nav-link" href="/admin/">Admin</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+    {% endblock %}
+
+    <main class="container py-4 py-lg-5">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+    <footer class="app-footer">
+      <div class="container">
+        <p class="mb-0">Personal Car Manager</p>
+      </div>
+    </footer>
+    {% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
