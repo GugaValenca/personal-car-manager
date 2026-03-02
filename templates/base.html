@@ -49,14 +49,7 @@
             <a class="nav-link" href="{% url 'cars:maintenance_list' %}">Maintenances</a>
             <a class="nav-link" href="{% url 'cars:expense_list' %}">Expenses</a>
             <a class="nav-link" href="/admin/">Admin</a>
-            <form class="d-inline" method="post" action="{% url 'logout' %}">
-              {% csrf_token %}
-              <button class="btn btn-sm btn-outline-light ms-lg-2" type="submit">
-                Logout
-              </button>
-            </form>
             {% else %}
-            <a class="nav-link" href="{% url 'login' %}">Login</a>
             <a class="nav-link" href="/admin/">Admin</a>
             {% endif %}
           </div>
