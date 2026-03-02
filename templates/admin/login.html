@@ -1,0 +1,79 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% trans 'Admin Login' %} | Personal Car Manager</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}" />
+  </head>
+  <body class="app-body">
+    <section class="login-shell">
+      <div class="login-card animate-rise">
+        <aside class="login-hero">
+          <span class="hero-chip"><i class="fas fa-shield-halved me-2"></i>ADMIN ACCESS</span>
+          <h1 class="display-6 mb-3">Control panel for fleet and records management.</h1>
+          <p class="mb-4">Use your staff credentials to access secure administrative actions.</p>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><i class="fas fa-check-circle me-2 text-info"></i>Car and maintenance control</li>
+            <li class="mb-2"><i class="fas fa-check-circle me-2 text-info"></i>Expense and user administration</li>
+            <li><i class="fas fa-check-circle me-2 text-info"></i>Protected back-office access</li>
+          </ul>
+        </aside>
+
+        <div class="login-form">
+          <p class="text-uppercase login-logo">Personal Car Manager</p>
+          <h2 class="h2 mb-1">{% trans 'Admin Sign In' %}</h2>
+          <p class="login-sub mb-4">{% trans 'Enter your admin credentials to continue.' %}</p>
+
+          {% if form.errors %}
+          <div class="alert alert-danger py-2">
+            {% trans 'Please enter the correct username and password.' %}
+          </div>
+          {% endif %}
+
+          <form action="{{ app_path }}" method="post" id="login-form">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="id_username" class="form-label">{% trans 'Username' %}</label>
+              <input
+                type="text"
+                name="username"
+                id="id_username"
+                class="form-control"
+                autofocus
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="id_password" class="form-label">{% trans 'Password' %}</label>
+              <input
+                type="password"
+                name="password"
+                id="id_password"
+                class="form-control"
+                required
+              />
+            </div>
+            {% if next %}
+            <input type="hidden" name="next" value="{{ next }}" />
+            {% endif %}
+            <button type="submit" class="btn btn-cta w-100">{% trans 'Log in' %}</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
