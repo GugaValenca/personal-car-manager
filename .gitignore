@@ -54,3 +54,4 @@ pytest_cache/
 
 # Backup files
 *.bak
+.vercel
