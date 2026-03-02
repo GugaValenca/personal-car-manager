@@ -1,38 +1,26 @@
 {% extends 'base.html' %}
 
 {% block title %}Login | Personal Car Manager{% endblock %}
-{% block body_class %}app-body{% endblock %}
+{% block body_class %}auth-body{% endblock %}
 
 {% block navigation %}{% endblock %}
 {% block footer %}{% endblock %}
 
 {% block content %}
-<section class="login-shell">
-  <div class="login-card animate-rise">
-    <aside class="login-hero">
-      <span class="hero-chip"><i class="fas fa-car-side me-2"></i>CAR MANAGER</span>
-      <h1 class="display-6 mb-3">Welcome back to your garage command center.</h1>
-      <p class="mb-4">
-        Review your cars, maintenance timeline and spending with one secure login.
-      </p>
-      <ul class="list-unstyled mb-4">
-        <li class="mb-2"><i class="fas fa-check-circle me-2 text-info"></i>Fast and focused dashboard</li>
-        <li class="mb-2"><i class="fas fa-check-circle me-2 text-info"></i>Maintenance and costs in one place</li>
-        <li><i class="fas fa-check-circle me-2 text-info"></i>Built for real daily usage</li>
-      </ul>
-      <div class="social-list">
-        <a class="social-item" href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a class="social-item" href="#" aria-label="X"><i class="fab fa-x-twitter"></i></a>
-        <a class="social-item" href="#" aria-label="Google"><i class="fab fa-google"></i></a>
+<section class="auth-shell">
+  <div class="auth-card animate-rise">
+    <aside class="auth-visual">
+      <div class="auth-visual-alt" aria-hidden="true"></div>
+      <div class="auth-social">
+        <a href="#" aria-label="facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="google"><i class="fab fa-google"></i></a>
       </div>
     </aside>
 
-    <div class="login-form">
-      <p class="text-uppercase login-logo">
-        <i class="fas fa-car-side"></i>Personal Car Manager
-      </p>
-      <h2 class="h2 mb-1">Sign in to your account</h2>
-      <p class="login-sub">Enter your credentials to continue.</p>
+    <div class="auth-panel">
+      <h1 class="auth-brand"><i class="fas fa-circle-notch me-1"></i>VOLAO</h1>
+      <button type="button" class="auth-facebook">Login with facebook</button>
 
       {% if form.errors %}
       <div class="alert alert-danger py-2">
@@ -42,8 +30,7 @@
 
       <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
-        <div class="mb-3">
-          <label for="id_username" class="form-label">Username</label>
+        <div class="mb-4">
           <input
             type="text"
             name="username"
@@ -53,20 +40,19 @@
             maxlength="150"
             required
             id="id_username"
-            class="form-control"
-            placeholder="john_doe"
+            class="form-control auth-field"
+            placeholder="Username & email address"
           />
         </div>
-        <div class="mb-3">
-          <label for="id_password" class="form-label">Password</label>
+        <div class="mb-4">
           <input
             type="password"
             name="password"
             autocomplete="current-password"
             required
             id="id_password"
-            class="form-control"
-            placeholder="Your password"
+            class="form-control auth-field"
+            placeholder="Password"
           />
         </div>
 
@@ -74,22 +60,23 @@
         <input type="hidden" name="next" value="{{ next }}" />
         {% endif %}
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="rememberMe" />
-            <label class="form-check-label muted" for="rememberMe">Remember me</label>
+        <div class="auth-row mb-3">
+          <div class="form-check auth-remember">
+            <input class="form-check-input" type="checkbox" id="rememberMe" style="margin-top: 0.2rem;" />
+            <label class="form-check-label" for="rememberMe">Remember login</label>
           </div>
-          <a href="/admin/password_reset/" class="small text-decoration-none">Forgot password?</a>
+          <button type="submit" class="auth-login-btn">Login</button>
         </div>
-
-        <button type="submit" class="btn btn-cta w-100">Sign In</button>
       </form>
 
-      <p class="text-center login-sep my-3">or continue with</p>
-      <div class="d-grid gap-2">
-        <button class="btn-social" type="button"><i class="fab fa-google me-2"></i>Sign in with Google</button>
-        <button class="btn-social" type="button"><i class="fab fa-apple me-2"></i>Sign in with Apple</button>
+      <div class="auth-meta">
+        <p class="mb-2">Forgot your username or password?</p>
+        <p class="mb-0">Don't have account? <a href="/admin/">Sign Up</a></p>
       </div>
+      <p class="auth-policy mb-0">
+        By signing up, you agree to VOLAO'S<br />
+        <a href="#">Terms and Conditions</a> & <a href="#">Privacy Policy</a>
+      </p>
     </div>
   </div>
 </section>

@@ -19,26 +19,21 @@
     />
     <link rel="stylesheet" href="{% static 'css/theme.css' %}" />
   </head>
-  <body class="app-body">
-    <section class="login-shell">
-      <div class="login-card animate-rise">
-        <aside class="login-hero">
-          <span class="hero-chip"><i class="fas fa-shield-halved me-2"></i>ADMIN ACCESS</span>
-          <h1 class="display-6 mb-3">Control panel for fleet and records management.</h1>
-          <p class="mb-4">Use your staff credentials to access secure administrative actions.</p>
-          <ul class="list-unstyled mb-0">
-            <li class="mb-2"><i class="fas fa-check-circle me-2 text-info"></i>Car and maintenance control</li>
-            <li class="mb-2"><i class="fas fa-check-circle me-2 text-info"></i>Expense and user administration</li>
-            <li><i class="fas fa-check-circle me-2 text-info"></i>Protected back-office access</li>
-          </ul>
+  <body class="auth-body">
+    <section class="auth-shell">
+      <div class="auth-card animate-rise">
+        <aside class="auth-visual">
+          <div class="auth-visual-alt" aria-hidden="true"></div>
+          <div class="auth-social">
+            <a href="#" aria-label="facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="google"><i class="fab fa-google"></i></a>
+          </div>
         </aside>
 
-        <div class="login-form">
-          <p class="text-uppercase login-logo">
-            <i class="fas fa-car-side"></i>Personal Car Manager
-          </p>
-          <h2 class="h2 mb-1">{% trans 'Admin Sign In' %}</h2>
-          <p class="login-sub mb-4">{% trans 'Enter your admin credentials to continue.' %}</p>
+        <div class="auth-panel">
+          <h1 class="auth-brand"><i class="fas fa-circle-notch me-1"></i>VOLAO</h1>
+          <button type="button" class="auth-facebook">Login with facebook</button>
 
           {% if form.errors %}
           <div class="alert alert-danger py-2">
@@ -48,32 +43,46 @@
 
           <form action="{{ app_path }}" method="post" id="login-form">
             {% csrf_token %}
-            <div class="mb-3">
-              <label for="id_username" class="form-label">{% trans 'Username' %}</label>
+            <div class="mb-4">
               <input
                 type="text"
                 name="username"
                 id="id_username"
-                class="form-control"
+                class="form-control auth-field"
+                placeholder="{% trans 'Username & email address' %}"
                 autofocus
                 required
               />
             </div>
-            <div class="mb-3">
-              <label for="id_password" class="form-label">{% trans 'Password' %}</label>
+            <div class="mb-4">
               <input
                 type="password"
                 name="password"
                 id="id_password"
-                class="form-control"
+                class="form-control auth-field"
+                placeholder="{% trans 'Password' %}"
                 required
               />
             </div>
             {% if next %}
             <input type="hidden" name="next" value="{{ next }}" />
             {% endif %}
-            <button type="submit" class="btn btn-cta w-100">{% trans 'Log in' %}</button>
+            <div class="auth-row mb-3">
+              <div class="form-check auth-remember">
+                <input class="form-check-input" type="checkbox" id="remember_admin" style="margin-top: 0.2rem;" />
+                <label class="form-check-label" for="remember_admin">{% trans 'Remember login' %}</label>
+              </div>
+              <button type="submit" class="auth-login-btn">{% trans 'Login' %}</button>
+            </div>
           </form>
+
+          <div class="auth-meta">
+            <p class="mb-2">{% trans 'Forgot your username or password?' %}</p>
+            <p class="mb-0">{% trans "Need a staff account?" %} <a href="/">{% trans 'Back to site' %}</a></p>
+          </div>
+          <p class="auth-policy mb-0">
+            {% trans 'By signing in, you agree to the administration access policy.' %}
+          </p>
         </div>
       </div>
     </section>
