@@ -90,3 +90,24 @@ class CarViewsTests(TestCase):
         self.assertEqual(payload["summary"]["total_cars"], 1)
         self.assertEqual(payload["summary"]["total_trip_distance"], 100)
         self.assertEqual(payload["summary"]["total_trip_income"], 180.0)
+
+    def test_user_can_create_car_via_ui_form(self):
+        self.client.login(username="owner", password="testpass123")
+        response = self.client.post(
+            reverse("cars:car_create"),
+            {
+                "make": "toyota",
+                "model": "corolla",
+                "year": 2022,
+                "color": "White",
+                "license_plate": "NEW-2022",
+                "fuel_type": "gasoline",
+                "usage_type": "personal",
+                "fleet_name": "",
+                "current_mileage": 12000,
+                "notes": "Created via UI form",
+                "is_active": "on",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Car.objects.filter(owner=self.user, license_plate="NEW-2022").exists())

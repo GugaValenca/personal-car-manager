@@ -8,7 +8,7 @@
     <h1 class="display-6 mb-1">My Cars</h1>
     <p class="muted mb-0">Your registered vehicles and quick access to details.</p>
   </div>
-  <a href="/admin/cars/car/add/" class="btn btn-cta">Add Car</a>
+  <a href="{% url 'cars:car_create' %}" class="btn btn-cta">Add Car</a>
 </section>
 
 <section class="row g-3 animate-rise">
@@ -31,7 +31,7 @@
     <div class="app-panel p-4">
       <h2 class="h4">No cars found</h2>
       <p class="muted">Start by adding your first vehicle to the system.</p>
-      <a href="/admin/cars/car/add/" class="btn btn-cta">Add First Car</a>
+      <a href="{% url 'cars:car_create' %}" class="btn btn-cta">Add First Car</a>
     </div>
   </div>
   {% endfor %}

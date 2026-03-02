@@ -44,11 +44,11 @@
     <div class="app-panel p-4 h-100">
       <h3 class="h4 mb-3">Quick Actions</h3>
       <div class="d-flex flex-wrap gap-2">
-        <a href="/admin/cars/car/add/" class="btn btn-cta">Add Car</a>
+        <a href="{% url 'cars:car_create' %}" class="btn btn-cta">Add Car</a>
         <a href="/admin/cars/maintenance/add/" class="btn btn-outline-light">Add Maintenance</a>
-        <a href="/admin/cars/expense/add/" class="btn btn-outline-light">Add Expense</a>
-        <a href="/admin/cars/fuelrecord/add/" class="btn btn-outline-light">Add Fuel Record</a>
-        <a href="/admin/cars/trip/add/" class="btn btn-outline-light">Add Trip</a>
+        <a href="{% url 'cars:expense_create' %}" class="btn btn-outline-light">Add Expense</a>
+        <a href="{% url 'cars:fuel_create' %}" class="btn btn-outline-light">Add Fuel Record</a>
+        <a href="{% url 'cars:trip_create' %}" class="btn btn-outline-light">Add Trip</a>
       </div>
     </div>
   </div>

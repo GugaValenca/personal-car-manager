@@ -1,8 +1,10 @@
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db.models import Sum
 from .models import Car, Maintenance, Expense, FuelRecord, Trip
+from .forms import CarForm, ExpenseForm, FuelRecordForm, TripForm
 
 
 def home(request):
@@ -190,3 +192,105 @@ def dashboard_api(request):
         ],
     }
     return JsonResponse(data)
+
+
+def _limit_car_queryset_to_owner(form, user):
+    if "car" in form.fields:
+        form.fields["car"].queryset = Car.objects.filter(owner=user, is_active=True)
+
+
+def _sync_car_mileage(car, mileage):
+    if mileage and mileage > car.current_mileage:
+        car.current_mileage = mileage
+        car.save(update_fields=["current_mileage"])
+
+
+@login_required
+def car_create(request):
+    if request.method == "POST":
+        form = CarForm(request.POST)
+        if form.is_valid():
+            car = form.save(commit=False)
+            car.owner = request.user
+            car.save()
+            messages.success(request, "Car created successfully.")
+            return redirect("cars:car_list")
+    else:
+        form = CarForm()
+    return render(
+        request,
+        "cars/form_page.html",
+        {"form": form, "title": "Add Car", "subtitle": "Register a vehicle in your account."},
+    )
+
+
+@login_required
+def expense_create(request):
+    if request.method == "POST":
+        form = ExpenseForm(request.POST)
+        _limit_car_queryset_to_owner(form, request.user)
+        if form.is_valid():
+            expense = form.save()
+            _sync_car_mileage(expense.car, expense.mileage)
+            messages.success(request, "Expense created successfully.")
+            return redirect("cars:expense_list")
+    else:
+        form = ExpenseForm()
+        _limit_car_queryset_to_owner(form, request.user)
+    return render(
+        request,
+        "cars/form_page.html",
+        {
+            "form": form,
+            "title": "Add Expense",
+            "subtitle": "Track costs like insurance, parking, and maintenance bills.",
+        },
+    )
+
+
+@login_required
+def fuel_create(request):
+    if request.method == "POST":
+        form = FuelRecordForm(request.POST)
+        _limit_car_queryset_to_owner(form, request.user)
+        if form.is_valid():
+            fuel = form.save()
+            _sync_car_mileage(fuel.car, fuel.odometer)
+            messages.success(request, "Fuel record created successfully.")
+            return redirect("cars:fuel_list")
+    else:
+        form = FuelRecordForm()
+        _limit_car_queryset_to_owner(form, request.user)
+    return render(
+        request,
+        "cars/form_page.html",
+        {
+            "form": form,
+            "title": "Add Fuel Record",
+            "subtitle": "Register fuel volume, cost and odometer for efficiency control.",
+        },
+    )
+
+
+@login_required
+def trip_create(request):
+    if request.method == "POST":
+        form = TripForm(request.POST)
+        _limit_car_queryset_to_owner(form, request.user)
+        if form.is_valid():
+            trip = form.save()
+            _sync_car_mileage(trip.car, trip.end_mileage)
+            messages.success(request, "Trip created successfully.")
+            return redirect("cars:trip_list")
+    else:
+        form = TripForm()
+        _limit_car_queryset_to_owner(form, request.user)
+    return render(
+        request,
+        "cars/form_page.html",
+        {
+            "form": form,
+            "title": "Add Trip",
+            "subtitle": "Record trip distance and income for taxi/fleet profitability.",
+        },
+    )
