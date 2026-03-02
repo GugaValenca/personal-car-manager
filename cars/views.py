@@ -1,4 +1,6 @@
-from django.http import JsonResponse
+from pathlib import Path
+
+from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -10,6 +12,30 @@ from .forms import CarForm, ExpenseForm, FuelRecordForm, TripForm
 def home(request):
     """Frontend SPA entrypoint"""
     return render(request, "cars/frontend_app.html")
+
+
+def frontend_asset(request, filename):
+    """Serve compiled SPA assets from repository storage."""
+    base_dir = Path(__file__).resolve().parent.parent / "static" / "app" / "assets"
+    file_path = (base_dir / filename).resolve()
+
+    if not str(file_path).startswith(str(base_dir.resolve())) or not file_path.exists():
+        raise Http404("Asset not found")
+
+    content_types = {
+        ".js": "application/javascript",
+        ".css": "text/css",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".png": "image/png",
+        ".svg": "image/svg+xml",
+        ".woff": "font/woff",
+        ".woff2": "font/woff2",
+    }
+    return FileResponse(
+        open(file_path, "rb"),
+        content_type=content_types.get(file_path.suffix.lower(), "application/octet-stream"),
+    )
 
 
 @login_required

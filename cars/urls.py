@@ -4,6 +4,7 @@ from . import views
 app_name = 'cars'
 
 urlpatterns = [
+    path("assets/<path:filename>", views.frontend_asset, name="frontend_asset"),
     path('', views.home, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path("api/dashboard/", views.dashboard_api, name="dashboard_api"),
