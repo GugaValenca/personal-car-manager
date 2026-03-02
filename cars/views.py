@@ -8,8 +8,8 @@ from .forms import CarForm, ExpenseForm, FuelRecordForm, TripForm
 
 
 def home(request):
-    """Homepage - accessible to everyone"""
-    return render(request, 'cars/home.html')
+    """Frontend SPA entrypoint"""
+    return render(request, "cars/frontend_app.html")
 
 
 @login_required

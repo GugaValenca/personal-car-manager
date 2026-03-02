@@ -4,36 +4,9 @@
     {
       "src": "car_manager/wsgi.py",
       "use": "@vercel/python"
-    },
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
     }
   ],
   "routes": [
-    {
-      "src": "/app/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "/app/favicon.ico",
-      "dest": "/favicon.ico"
-    },
-    {
-      "src": "/app/robots.txt",
-      "dest": "/robots.txt"
-    },
-    {
-      "src": "/app",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/app/(.*)",
-      "dest": "/index.html"
-    },
     {
       "src": "/(.*)",
       "dest": "car_manager/wsgi.py"

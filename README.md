@@ -13,7 +13,6 @@ Fullstack car management platform with Django backend plus React frontend for pe
 - Live Demo (Vercel): https://personal-car-manager.vercel.app
 - Production URL: https://personal-car-manager-39n0p06uu-gugavalencas-projects.vercel.app
 - Repository: https://github.com/gugavalenca/personal-car-manager
-- Frontend App (same domain): https://personal-car-manager.vercel.app/app
 
 ## Overview
 Personal Car Manager is a realistic fullstack portfolio project focused on common daily workflows:
@@ -84,6 +83,7 @@ python manage.py runserver
 
 Then open:
 - `http://127.0.0.1:8000/`
+- `http://127.0.0.1:8000/dashboard/`
 - `http://127.0.0.1:8000/admin/` (to add sample records quickly)
 - `http://127.0.0.1:8000/cars/new/`
 - `http://127.0.0.1:8000/expenses/new/`
