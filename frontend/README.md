@@ -1,6 +1,6 @@
-# Personal Car Manager Frontend (Lovable)
+# Personal Car Manager Frontend
 
-React + TypeScript frontend exported from Lovable and integrated into the `personal-car-manager` monorepo.
+React + TypeScript frontend integrated into the `personal-car-manager` monorepo.
 
 ## Stack
 - React 18

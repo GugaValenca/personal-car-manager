@@ -7,13 +7,13 @@
 ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-Ready-000000?logo=vercel&logoColor=white)
 
-Fullstack car management platform with Django backend plus Lovable React frontend for personal cars, taxi operation, and fleet cost control.
+Fullstack car management platform with Django backend plus React frontend for personal cars, taxi operation, and fleet cost control.
 
 ## Live Demo + Repository Links
 - Live Demo (Vercel): https://personal-car-manager.vercel.app
 - Production URL: https://personal-car-manager-39n0p06uu-gugavalencas-projects.vercel.app
 - Repository: https://github.com/gugavalenca/personal-car-manager
-- Frontend App (Lovable on same domain): https://personal-car-manager.vercel.app/app
+- Frontend App (same domain): https://personal-car-manager.vercel.app/app
 
 ## Overview
 Personal Car Manager is a realistic fullstack portfolio project focused on common daily workflows:
@@ -26,7 +26,7 @@ Personal Car Manager is a realistic fullstack portfolio project focused on commo
 The project now includes:
 - Django web interface for secure operations and admin workflows
 - JSON API endpoints for frontend integration
-- Lovable-generated React frontend in `frontend/` connected to backend data
+- React frontend in `frontend/` connected to backend data
 
 ## Features
 - User-based car ownership (each user sees only their own cars)
@@ -56,7 +56,7 @@ The project now includes:
 ## Tech Stack
 - Backend: Python, Django 4.2
 - Frontend (server-rendered): Django Templates, Bootstrap 5
-- Frontend (SPA): React, TypeScript, Vite, Tailwind (Lovable export)
+- Frontend (SPA): React, TypeScript, Vite, Tailwind
 - Database: SQLite (default development database)
 - Deployment: Vercel (`vercel.json` configured)
 
@@ -90,7 +90,7 @@ Then open:
 - `http://127.0.0.1:8000/fuel-records/new/`
 - `http://127.0.0.1:8000/trips/new/`
 
-Frontend development (Lovable app):
+Frontend development:
 ```bash
 cd frontend
 npm run dev
@@ -104,7 +104,7 @@ By default, the frontend consumes backend metrics from:
 personal-car-manager/
 |-- car_manager/          # Django project settings and root URLs
 |-- cars/                 # Domain app: models, views, URLs, tests
-|-- frontend/             # Lovable React frontend integrated into this repo
+|-- frontend/             # React frontend integrated into this repo
 |-- templates/cars/       # Server-rendered HTML templates
 |-- static/               # Static assets
 |-- manage.py

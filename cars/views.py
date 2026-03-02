@@ -129,7 +129,7 @@ def trip_list(request):
 
 @login_required
 def dashboard_api(request):
-    """JSON endpoint for Lovable frontend integration"""
+    """JSON endpoint for frontend integration"""
     user_cars = Car.objects.filter(owner=request.user)
     total_expenses = Expense.objects.filter(car__owner=request.user).aggregate(
         total=Sum("amount")
