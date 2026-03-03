@@ -25,6 +25,10 @@ body.app-body {
     url("/assets/car-bg--ckbFmrT.jpg") center / cover fixed no-repeat;
 }
 
+main.container {
+  max-width: 1120px;
+}
+
 .bg-orb {
   display: none;
 }
@@ -198,6 +202,11 @@ h5 {
   justify-content: center;
   color: #d9e6ff;
   text-decoration: none;
+}
+
+.social-links svg {
+  width: 14px;
+  height: 14px;
 }
 
 .social-links a:hover {

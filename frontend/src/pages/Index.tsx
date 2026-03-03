@@ -12,22 +12,11 @@ const Index = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-background/50" />
       <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-background/40" />
 
-      <div className="relative z-10 flex min-h-screen flex-col">
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1920px] flex-col">
         <header className="flex items-center justify-between px-6 py-5 md:px-12">
           <div className="flex items-center gap-2.5 animate-fade-in-up">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-primary/20 bg-primary/15 text-primary">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M14 16H9m10 0h2v-3.15a1 1 0 0 0-.23-.64l-1.38-1.67a1 1 0 0 0-.77-.36H14l-1-2H5.86a1 1 0 0 0-.9.56L3 12v4h2m0 0h14m-9 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" />
-              </svg>
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-primary/20 bg-primary/15">
+              <Car className="h-5 w-5 text-primary" />
             </div>
             <span
               className="text-sm font-semibold tracking-wider text-foreground/90 uppercase"
@@ -99,7 +88,7 @@ const Index = () => {
             className="text-[11px] text-muted-foreground/50 text-center lg:text-left"
             style={{ fontFamily: "Inter, sans-serif" }}
           >
-            © 2026 Personal Car Manager - A fullstack portfolio project
+            &copy; 2026 Personal Car Manager - A fullstack portfolio project
           </p>
           <div className="mt-3 flex items-center justify-center gap-2 lg:justify-start">
             <a
