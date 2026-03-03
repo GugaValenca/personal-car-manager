@@ -4,8 +4,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% trans "Admin Login" %} | Personal Car Manager</title>
-    <link rel="stylesheet" href="/assets/index-BDJjh9rM.css" />
+    <title>&#128663; {% trans "Admin Login" %} | Personal Car Manager</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ctext y='18' font-size='18'%3E%F0%9F%9A%97%3C/text%3E%3C/svg%3E"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/index-CYSpDiE6.css" />
   </head>
   <body>
     <div class="relative min-h-screen w-full overflow-hidden">
@@ -19,8 +28,10 @@
       <div class="relative z-10 flex min-h-screen flex-col">
         <header class="flex items-center justify-between px-6 py-5 md:px-12">
           <div class="flex items-center gap-2.5">
-            <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 border border-primary/20">
-              <span class="h-5 w-5 text-primary">🚗</span>
+            <div class="flex h-9 w-9 items-center justify-center rounded-lg border border-primary/20 bg-primary/15 text-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 16H9m10 0h2v-3.15a1 1 0 0 0-.23-.64l-1.38-1.67a1 1 0 0 0-.77-.36H14l-1-2H5.86a1 1 0 0 0-.9.56L3 12v4h2m0 0h14m-9 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm10 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path>
+              </svg>
             </div>
             <span class="text-sm font-semibold tracking-wider text-foreground/90 uppercase">
               PERSONAL CAR MANAGER
@@ -34,20 +45,20 @@
           </a>
         </header>
 
-        <main class="flex flex-1 flex-col lg:flex-row items-center px-6 md:px-12 lg:px-20 pb-8 gap-8 lg:gap-16">
-          <section class="flex flex-1 flex-col justify-center max-w-xl lg:max-w-lg py-8 lg:py-0">
+        <main class="flex flex-1 flex-col items-center gap-8 px-6 pb-8 md:px-12 lg:flex-row lg:gap-16 lg:px-20">
+          <section class="flex max-w-xl flex-1 flex-col justify-center py-8 lg:max-w-lg lg:py-0">
             <div>
               <p class="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-primary">
                 Personal Car Manager
               </p>
             </div>
 
-            <h1 class="text-4xl md:text-5xl lg:text-[3.4rem] font-semibold leading-tight text-foreground mb-6">
+            <h1 class="mb-6 text-4xl font-semibold leading-tight text-foreground md:text-5xl lg:text-[3.4rem]">
               Your vehicles, <span class="text-primary">organized</span> in one
               place.
             </h1>
 
-            <p class="text-base md:text-lg leading-relaxed text-muted-foreground mb-10 max-w-md">
+            <p class="mb-10 max-w-md text-base leading-relaxed text-muted-foreground md:text-lg">
               Track maintenance, monitor expenses, and manage your entire fleet
               with a practical dashboard built for everyday car ownership.
             </p>
@@ -68,7 +79,7 @@
           <section class="w-full max-w-md lg:max-w-[420px]">
             <div class="glass-card p-8 md:p-10">
               <div class="mb-8">
-                <h2 class="text-2xl font-semibold text-foreground mb-1.5">{% trans "Sign In" %}</h2>
+                <h2 class="mb-1.5 text-2xl font-semibold text-foreground">{% trans "Sign In" %}</h2>
                 <p class="text-sm text-muted-foreground">{% trans "Access your admin dashboard" %}</p>
               </div>
 
@@ -107,7 +118,7 @@
                     required
                     class="input-glass"
                     autocomplete="current-password"
-                    placeholder="••••••••"
+                    placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
                   />
                 </div>
 
@@ -116,16 +127,16 @@
                 {% endif %}
 
                 <div class="flex items-center justify-between text-xs">
-                  <label class="flex items-center gap-2 cursor-pointer text-secondary-foreground">
+                  <label class="cursor-pointer text-secondary-foreground">
                     <input type="checkbox" class="h-3.5 w-3.5 rounded border-border accent-primary" />
                     {% trans "Remember me" %}
                   </label>
-                  <a href="/admin/password_reset/" class="text-primary hover:text-primary/80 transition-colors font-medium">
+                  <a href="/admin/password_reset/" class="font-medium text-primary transition-colors hover:text-primary/80">
                     {% trans "Forgot password?" %}
                   </a>
                 </div>
 
-                <button type="submit" class="btn-primary flex items-center justify-center gap-2 mt-2">
+                <button type="submit" class="btn-primary mt-2 flex items-center justify-center gap-2">
                   {% trans "Sign In" %}
                 </button>
               </form>
@@ -134,9 +145,16 @@
         </main>
 
         <footer class="px-6 py-4 md:px-12">
-          <p class="text-[11px] text-muted-foreground/50 text-center lg:text-left">
-            © 2026 Personal Car Manager — A fullstack portfolio project
+          <p class="text-center text-[11px] text-muted-foreground/50">
+            &copy; 2026 Personal Car Manager - A fullstack portfolio project
           </p>
+          <div class="mt-3 flex items-center justify-center gap-2">
+            <a class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60 bg-secondary/30 text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary" href="https://github.com/GugaValenca" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60 bg-secondary/30 text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary" href="https://www.linkedin.com/in/gugavalenca/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60 bg-secondary/30 text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary" href="https://www.instagram.com/gugatampa" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60 bg-secondary/30 text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary" href="https://www.twitch.tv/gugatampa" target="_blank" rel="noopener noreferrer" aria-label="Twitch"><i class="fab fa-twitch"></i></a>
+            <a class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/60 bg-secondary/30 text-muted-foreground transition-colors hover:border-primary/60 hover:text-primary" href="https://discord.com/invite/3QQyR5whBZ" target="_blank" rel="noopener noreferrer" aria-label="Discord"><i class="fab fa-discord"></i></a>
+          </div>
         </footer>
       </div>
     </div>
