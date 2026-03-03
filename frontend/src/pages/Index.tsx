@@ -34,7 +34,7 @@ const Index = () => {
           </a>
         </header>
 
-        <main className="flex flex-1 flex-col lg:flex-row items-center px-6 md:px-12 lg:px-20 pb-8 gap-8 lg:gap-16">
+        <main className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col items-center gap-8 px-6 pb-8 md:px-12 lg:flex-row lg:gap-16 lg:px-20">
           <section className="flex flex-1 flex-col justify-center max-w-xl lg:max-w-lg py-8 lg:py-0">
             <div className="animate-fade-in-left animate-delay-100">
               <p
