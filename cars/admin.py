@@ -1,6 +1,13 @@
 from django.contrib import admin
 from .models import Car, Maintenance, Expense, FuelRecord, Trip
 
+# Defaults to "Django administration" otherwise — replaces it everywhere the
+# stock admin templates render it (browser tab, header, index page) without
+# needing to override those templates ourselves.
+admin.site.site_header = "Personal Car Manager"
+admin.site.site_title = "Personal Car Manager Admin"
+admin.site.index_title = "Fleet Administration"
+
 
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
