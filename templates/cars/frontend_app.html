@@ -1,4 +1,4 @@
-{% load static %}
+{% load static vite_assets %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -10,10 +10,10 @@
       name="description"
       content="Frontend dashboard for vehicle, trip, fuel and expense management."
     />
-    <link rel="stylesheet" href="/assets/index-D4UxErYw.css" />
+    <link rel="stylesheet" href="{% vite_css_url %}" />
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/assets/index-CkJhgupB.js"></script>
+    <script type="module" src="{% vite_js_url %}"></script>
   </body>
 </html>

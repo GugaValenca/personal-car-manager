@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 
+/** Reads a cookie value by name (used to grab Django's csrftoken cookie). */
+function getCookie(name: string): string | null {
+  const match = document.cookie.match(
+    new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()[\]\\/+^])/g, "\\$1") + "=([^;]*)")
+  );
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
 const LoginCard = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
@@ -16,7 +24,12 @@ const LoginCard = () => {
     try {
       const response = await fetch("/auth/login/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          // Django's CsrfViewMiddleware requires this header on unsafe
+          // methods; the cookie is set by the "/" page load (ensure_csrf_cookie).
+          "X-CSRFToken": getCookie("csrftoken") || "",
+        },
         credentials: "include",
         body: JSON.stringify({ username, password }),
       });

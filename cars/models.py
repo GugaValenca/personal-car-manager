@@ -176,7 +176,7 @@ class Car(models.Model):
     year = models.IntegerField(verbose_name="Year")
     color = models.CharField(max_length=30, verbose_name="Color")
     license_plate = models.CharField(
-        max_length=20, verbose_name="License Plate")
+        max_length=20, unique=True, verbose_name="License Plate")
     fuel_type = models.CharField(
         max_length=20, choices=FUEL_CHOICES, verbose_name="Fuel Type")
     usage_type = models.CharField(

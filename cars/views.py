@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+from django.core.paginator import Paginator
 from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -8,14 +9,27 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.db.models import Sum
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 from .models import Car, Maintenance, Expense, FuelRecord, Trip
-from .forms import CarForm, ExpenseForm, FuelRecordForm, TripForm
+from .forms import CarForm, ExpenseForm, FuelRecordForm, MaintenanceForm, TripForm
+
+PAGE_SIZE = 20
 
 
+def _paginate(request, queryset, page_size=PAGE_SIZE):
+    paginator = Paginator(queryset, page_size)
+    return paginator.get_page(request.GET.get("page"))
+
+
+@ensure_csrf_cookie
 def home(request):
-    """Frontend SPA entrypoint"""
+    """Frontend SPA entrypoint.
+
+    `ensure_csrf_cookie` makes sure the csrftoken cookie is set on this
+    response so the React login form (a plain fetch(), not a Django form) can
+    read it and send it back with the login POST below.
+    """
     return render(request, "cars/frontend_app.html")
 
 
@@ -43,10 +57,15 @@ def frontend_asset(request, filename):
     )
 
 
-@csrf_exempt
 @require_POST
 def frontend_login(request):
-    """Lightweight login endpoint used by SPA login card."""
+    """Lightweight login endpoint used by SPA login card.
+
+    Protected by Django's normal CSRF check (via the X-CSRFToken header sent
+    by LoginCard.tsx, read from the csrftoken cookie set by `home()` above).
+    Previously this was @csrf_exempt, which allowed login CSRF: a third-party
+    site could silently submit this form on a victim's behalf.
+    """
     try:
         payload = json.loads(request.body.decode("utf-8"))
     except (json.JSONDecodeError, UnicodeDecodeError):
@@ -148,7 +167,7 @@ def dashboard(request):
 def car_list(request):
     """List all user's cars"""
     cars = Car.objects.filter(owner=request.user)
-    return render(request, 'cars/car_list.html', {'cars': cars})
+    return render(request, 'cars/car_list.html', {'cars': _paginate(request, cars)})
 
 
 @login_required
@@ -181,29 +200,35 @@ def car_detail(request, pk):
 @login_required
 def maintenance_list(request):
     """List all user's maintenances"""
-    maintenances = Maintenance.objects.filter(car__owner=request.user)
-    return render(request, 'cars/maintenance_list.html', {'maintenances': maintenances})
+    maintenances = Maintenance.objects.filter(
+        car__owner=request.user
+    ).select_related("car")
+    return render(
+        request, 'cars/maintenance_list.html', {'maintenances': _paginate(request, maintenances)}
+    )
 
 
 @login_required
 def expense_list(request):
     """List all user's expenses"""
-    expenses = Expense.objects.filter(car__owner=request.user)
-    return render(request, 'cars/expense_list.html', {'expenses': expenses})
+    expenses = Expense.objects.filter(car__owner=request.user).select_related("car")
+    return render(request, 'cars/expense_list.html', {'expenses': _paginate(request, expenses)})
 
 
 @login_required
 def fuel_list(request):
     """List all user's fuel records"""
-    fuel_records = FuelRecord.objects.filter(car__owner=request.user)
-    return render(request, "cars/fuel_list.html", {"fuel_records": fuel_records})
+    fuel_records = FuelRecord.objects.filter(car__owner=request.user).select_related("car")
+    return render(
+        request, "cars/fuel_list.html", {"fuel_records": _paginate(request, fuel_records)}
+    )
 
 
 @login_required
 def trip_list(request):
     """List all user's trips"""
-    trips = Trip.objects.filter(car__owner=request.user)
-    return render(request, "cars/trip_list.html", {"trips": trips})
+    trips = Trip.objects.filter(car__owner=request.user).select_related("car")
+    return render(request, "cars/trip_list.html", {"trips": _paginate(request, trips)})
 
 
 @login_required
@@ -257,7 +282,9 @@ def dashboard_api(request):
                 "date": expense.date.isoformat(),
                 "type": expense.expense_type,
             }
-            for expense in Expense.objects.filter(car__owner=request.user)[:10]
+            for expense in Expense.objects.filter(
+                car__owner=request.user
+            ).select_related("car")[:10]
         ],
         "recent_trips": [
             {
@@ -267,7 +294,9 @@ def dashboard_api(request):
                 "income": float(trip.income),
                 "date": trip.date.isoformat(),
             }
-            for trip in Trip.objects.filter(car__owner=request.user)[:10]
+            for trip in Trip.objects.filter(
+                car__owner=request.user
+            ).select_related("car")[:10]
         ],
     }
     return JsonResponse(data)
@@ -300,6 +329,30 @@ def car_create(request):
         request,
         "cars/form_page.html",
         {"form": form, "title": "Add Car", "subtitle": "Register a vehicle in your account."},
+    )
+
+
+@login_required
+def maintenance_create(request):
+    if request.method == "POST":
+        form = MaintenanceForm(request.POST)
+        _limit_car_queryset_to_owner(form, request.user)
+        if form.is_valid():
+            maintenance = form.save()
+            _sync_car_mileage(maintenance.car, maintenance.mileage_at_service)
+            messages.success(request, "Maintenance record created successfully.")
+            return redirect("cars:maintenance_list")
+    else:
+        form = MaintenanceForm()
+        _limit_car_queryset_to_owner(form, request.user)
+    return render(
+        request,
+        "cars/form_page.html",
+        {
+            "form": form,
+            "title": "Add Maintenance",
+            "subtitle": "Log a service so cost and mileage history stay accurate.",
+        },
     )
 
 

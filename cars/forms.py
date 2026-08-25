@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Car, Expense, FuelRecord, Trip
+from .models import Car, Expense, FuelRecord, Maintenance, Trip
 
 
 class StyledModelForm(forms.ModelForm):
@@ -29,6 +29,22 @@ class CarForm(StyledModelForm):
             "notes",
             "is_active",
         ]
+
+
+class MaintenanceForm(StyledModelForm):
+    class Meta:
+        model = Maintenance
+        fields = [
+            "car",
+            "service_name",
+            "description",
+            "service_date",
+            "cost",
+            "mileage_at_service",
+            "service_provider",
+            "notes",
+        ]
+        widgets = {"service_date": forms.DateInput(attrs={"type": "date"})}
 
 
 class ExpenseForm(StyledModelForm):

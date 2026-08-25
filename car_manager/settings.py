@@ -13,21 +13,39 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Loads .env for local development (see .env.example). No-op if the file
+# doesn't exist, so this is safe in production, where real env vars are set
+# through the hosting provider instead of a committed/local file.
+load_dotenv(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv(
-    "DJANGO_SECRET_KEY",
-    "django-insecure-n(m^h+b%6)al$s8a(_#b^v+owjcl-&hou)fvh5+vfw)wx)j$6h",
-)
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DJANGO_DEBUG", "True").lower() == "true"
+# Defaults to False so a missing env var in production fails closed instead
+# of silently exposing debug info (stack traces, settings, SQL).
+DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
+
+# SECURITY WARNING: keep the secret key used in production secret!
+# The "django-insecure-" fallback is ONLY for local development (matches the
+# key django-admin generates for a fresh project). In production DEBUG=False,
+# so a missing DJANGO_SECRET_KEY raises instead of falling back silently.
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = "django-insecure-n(m^h+b%6)al$s8a(_#b^v+owjcl-&hou)fvh5+vfw)wx)j$6h"
+    else:
+        raise ImproperlyConfigured(
+            "DJANGO_SECRET_KEY environment variable must be set when DEBUG=False."
+        )
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -36,6 +54,19 @@ ALLOWED_HOSTS = [
     ).split(",")
     if host.strip()
 ]
+
+# Hardening applied only in production (DEBUG=False). Left off locally so
+# `runserver` over plain HTTP still works without extra config.
+if not DEBUG:
+    SECURE_SSL_REDIRECT = os.getenv("DJANGO_SECURE_SSL_REDIRECT", "True").lower() == "true"
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = int(os.getenv("DJANGO_HSTS_SECONDS", "3600"))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    # Vercel terminates TLS in front of the app and forwards this header.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Application definition
@@ -83,12 +114,18 @@ WSGI_APPLICATION = "car_manager.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+#
+# SQLite is fine for local development, but Vercel's serverless functions have
+# an ephemeral filesystem: a SQLite file written there does not survive
+# between deploys (or reliably between invocations), so any data entered in
+# that environment can vanish. Set DATABASE_URL (e.g. to a managed Postgres
+# instance from Neon/Supabase) to use a real database there instead; SQLite
+# stays the default so local dev needs no extra setup.
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+    )
 }
 
 
@@ -128,6 +165,11 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+# Source directory for hand-authored static assets (css/theme.css, favicon, the
+# compiled SPA bundle). Registered so `{% static %}` resolves both locally via
+# `runserver` (DEBUG=True) and through the explicit /static/ route added in
+# car_manager/urls.py for the Vercel deployment, which has no collectstatic step.
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

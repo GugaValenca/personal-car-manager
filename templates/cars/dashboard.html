@@ -45,7 +45,7 @@
       <h3 class="h4 mb-3">Quick Actions</h3>
       <div class="d-flex flex-wrap gap-2">
         <a href="{% url 'cars:car_create' %}" class="btn btn-cta">Add Car</a>
-        <a href="/admin/cars/maintenance/add/" class="btn btn-outline-light">Add Maintenance</a>
+        <a href="{% url 'cars:maintenance_create' %}" class="btn btn-outline-light">Add Maintenance</a>
         <a href="{% url 'cars:expense_create' %}" class="btn btn-outline-light">Add Expense</a>
         <a href="{% url 'cars:fuel_create' %}" class="btn btn-outline-light">Add Fuel Record</a>
         <a href="{% url 'cars:trip_create' %}" class="btn btn-outline-light">Add Trip</a>

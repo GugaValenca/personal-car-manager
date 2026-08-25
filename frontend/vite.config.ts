@@ -17,4 +17,14 @@ export default defineConfig(() => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    // Emitted as dist/.vite/manifest.json. The Django templates read this
+    // (via cars/templatetags/vite_assets.py) to resolve the hashed JS/CSS
+    // filenames instead of hardcoding them, so a new `npm run build` no
+    // longer requires manually editing 3 templates.
+    manifest: true,
+    rollupOptions: {
+      input: path.resolve(__dirname, "index.html"),
+    },
+  },
 }));
