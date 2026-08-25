@@ -1,0 +1,18 @@
+{
+  "index.html": {
+    "file": "assets/index-BTqZbdjU.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "css": [
+      "assets/index-BKxiIlVq.css"
+    ],
+    "assets": [
+      "assets/car-bg--ckbFmrT.jpg"
+    ]
+  },
+  "src/assets/car-bg.jpg": {
+    "file": "assets/car-bg--ckbFmrT.jpg",
+    "src": "src/assets/car-bg.jpg"
+  }
+}

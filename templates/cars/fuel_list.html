@@ -49,4 +49,5 @@
   <p class="muted mb-0">No fuel records found.</p>
   {% endif %}
 </section>
+{% include 'cars/_pagination.html' with page_obj=fuel_records %}
 {% endblock %}

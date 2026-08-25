@@ -14,6 +14,7 @@ urlpatterns = [
     path("cars/new/", views.car_create, name="car_create"),
     path('cars/<int:pk>/', views.car_detail, name='car_detail'),
     path('maintenances/', views.maintenance_list, name='maintenance_list'),
+    path("maintenances/new/", views.maintenance_create, name="maintenance_create"),
     path('expenses/', views.expense_list, name='expense_list'),
     path("expenses/new/", views.expense_create, name="expense_create"),
     path("fuel-records/", views.fuel_list, name="fuel_list"),

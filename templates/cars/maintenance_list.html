@@ -8,7 +8,7 @@
     <h1 class="display-6 mb-1">Maintenance Records</h1>
     <p class="muted mb-0">Service history across your vehicles.</p>
   </div>
-  <a href="/admin/cars/maintenance/add/" class="btn btn-cta">Add Maintenance</a>
+  <a href="{% url 'cars:maintenance_create' %}" class="btn btn-cta">Add Maintenance</a>
 </section>
 
 <section class="app-panel p-3 p-lg-4 animate-rise">
@@ -45,4 +45,5 @@
   <p class="muted mb-0">No maintenance records found.</p>
   {% endif %}
 </section>
+{% include 'cars/_pagination.html' with page_obj=maintenances %}
 {% endblock %}

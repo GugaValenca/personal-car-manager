@@ -45,4 +45,5 @@
   <p class="muted mb-0">No expenses found.</p>
   {% endif %}
 </section>
+{% include 'cars/_pagination.html' with page_obj=expenses %}
 {% endblock %}
