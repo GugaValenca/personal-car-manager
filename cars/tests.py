@@ -297,17 +297,22 @@ class LoginLockoutTests(TestCase):
         self.user = User.objects.create_user(username="owner", password="testpass123")
 
     def test_repeated_failed_logins_get_locked_out(self):
-        for i in range(5):
+        # AXES_FAILURE_LIMIT = 5: the first 4 wrong attempts are ordinary
+        # rejections, the 5th is where axes actually applies the lockout.
+        statuses = []
+        for _ in range(5):
             response = self.client.post(
                 reverse("cars:frontend_login"),
                 data=json.dumps({"username": "owner", "password": "wrong-password"}),
                 content_type="application/json",
             )
-            print("DIAG wrong", i, response.status_code)
+            statuses.append(response.status_code)
+        self.assertEqual(statuses, [401, 401, 401, 401, 429])
 
-        locked_response = self.client.post(
+        # Locked out means locked out - the right password doesn't help anymore.
+        response = self.client.post(
             reverse("cars:frontend_login"),
             data=json.dumps({"username": "owner", "password": "testpass123"}),
             content_type="application/json",
         )
-        print("DIAG correct (6th overall)", locked_response.status_code)
+        self.assertEqual(response.status_code, 429)
