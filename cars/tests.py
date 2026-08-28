@@ -255,6 +255,31 @@ class CarViewsTests(TestCase):
             asset_response = self.client.get(asset_url)
             self.assertEqual(asset_response.status_code, 200, f"{asset_url} is not servable")
 
+    def test_dashboard_money_totals_render_with_two_decimals(self):
+        """Regression test: aggregated Decimal sums (Sum('total_cost') etc.)
+        used to hit the template unformatted and could render with a dozen
+        trailing zeros (e.g. "$171.540000000000") instead of "$171.54"."""
+        FuelRecord.objects.create(
+            car=self.car, date="2026-03-01", odometer=45050,
+            liters="30.00", price_per_liter="1.10", total_cost="45.90",
+        )
+        FuelRecord.objects.create(
+            car=self.car, date="2026-03-08", odometer=45200,
+            liters="35.00", price_per_liter="1.05", total_cost="54.92",
+        )
+
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("cars:dashboard"))
+        html = response.content.decode()
+
+        money_values = re.findall(r"\$(-?\d[\d,]*\.\d+)", html)
+        self.assertTrue(money_values, "no currency values found on the dashboard")
+        for value in money_values:
+            decimals = value.split(".")[1]
+            self.assertEqual(
+                len(decimals), 2, f"expected 2 decimal places, got '${value}'"
+            )
+
 
 class FrontendLoginCsrfTests(TestCase):
     """frontend_login used to be @csrf_exempt (login CSRF risk). These tests

@@ -36,7 +36,7 @@
           <td>{{ trip.date }}</td>
           <td>{{ trip.get_trip_type_display }}</td>
           <td>{{ trip.distance_km }} km</td>
-          <td>${{ trip.income }}</td>
+          <td>${{ trip.income|floatformat:2 }}</td>
           <td>{{ trip.passengers|default:"-" }}</td>
         </tr>
         {% endfor %}

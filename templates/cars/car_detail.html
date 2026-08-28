@@ -30,19 +30,19 @@
   <div class="col-md-4">
     <div class="data-card p-3">
       <p class="muted mb-1">Maintenance Cost</p>
-      <h2 class="h3 mb-0">${{ total_maintenance_cost|default:"0.00" }}</h2>
+      <h2 class="h3 mb-0">${{ total_maintenance_cost|default:0|floatformat:2 }}</h2>
     </div>
   </div>
   <div class="col-md-4">
     <div class="data-card p-3">
       <p class="muted mb-1">Expenses Cost</p>
-      <h2 class="h3 mb-0">${{ total_expense_cost|default:"0.00" }}</h2>
+      <h2 class="h3 mb-0">${{ total_expense_cost|default:0|floatformat:2 }}</h2>
     </div>
   </div>
   <div class="col-md-4">
     <div class="data-card p-3">
       <p class="muted mb-1">Total Cost</p>
-      <h2 class="h3 mb-0">${{ total_cost|default:"0.00" }}</h2>
+      <h2 class="h3 mb-0">${{ total_cost|default:0|floatformat:2 }}</h2>
     </div>
   </div>
 </section>
@@ -56,7 +56,7 @@
         {% for maintenance in maintenances %}
         <li class="mb-2">
           {{ maintenance.service_date }} - {{ maintenance.service_name }}
-          <span class="muted">(${{ maintenance.cost }})</span>
+          <span class="muted">(${{ maintenance.cost|floatformat:2 }})</span>
         </li>
         {% endfor %}
       </ul>
@@ -73,7 +73,7 @@
         {% for expense in expenses %}
         <li class="mb-2">
           {{ expense.date }} - {{ expense.description }}
-          <span class="muted">(${{ expense.amount }})</span>
+          <span class="muted">(${{ expense.amount|floatformat:2 }})</span>
         </li>
         {% endfor %}
       </ul>

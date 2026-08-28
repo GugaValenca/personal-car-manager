@@ -35,7 +35,7 @@
           <td>{{ expense.get_expense_type_display }}</td>
           <td>{{ expense.description }}</td>
           <td>{{ expense.date }}</td>
-          <td>${{ expense.amount }}</td>
+          <td>${{ expense.amount|floatformat:2 }}</td>
         </tr>
         {% endfor %}
       </tbody>

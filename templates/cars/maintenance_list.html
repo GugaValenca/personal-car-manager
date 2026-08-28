@@ -35,7 +35,7 @@
           <td>{{ maintenance.service_name }}</td>
           <td>{{ maintenance.service_date }}</td>
           <td>{{ maintenance.mileage_at_service }}</td>
-          <td>${{ maintenance.cost }}</td>
+          <td>${{ maintenance.cost|floatformat:2 }}</td>
         </tr>
         {% endfor %}
       </tbody>

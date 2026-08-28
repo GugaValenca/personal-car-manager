@@ -36,8 +36,8 @@
           </td>
           <td>{{ record.date }}</td>
           <td>{{ record.liters }}</td>
-          <td>${{ record.price_per_liter }}</td>
-          <td>${{ record.total_cost }}</td>
+          <td>${{ record.price_per_liter|floatformat:2 }}</td>
+          <td>${{ record.total_cost|floatformat:2 }}</td>
           <td>{{ record.odometer }}</td>
           <td>{{ record.station_name|default:"-" }}</td>
         </tr>
