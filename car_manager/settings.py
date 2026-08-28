@@ -67,6 +67,11 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
     # Vercel terminates TLS in front of the app and forwards this header.
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    # Without this, axes reads REMOTE_ADDR, which behind Vercel's proxy is
+    # Vercel's own edge address for every request - every visitor would share
+    # one lockout bucket. Telling it there's exactly one proxy hop makes it
+    # read the real client IP from X-Forwarded-For instead.
+    AXES_IPWARE_PROXY_COUNT = 1
 
 
 # Application definition
@@ -172,6 +177,16 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
+
+# axes logs every failed login attempt at INFO level, which drowns out
+# `manage.py test` output. The lockouts themselves are still recorded either way.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "loggers": {
+        "axes": {"level": "WARNING"},
+    },
+}
 
 
 # Static files (CSS, JavaScript, Images)
