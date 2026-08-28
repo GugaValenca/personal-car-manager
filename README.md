@@ -22,7 +22,7 @@ Everything is scoped to the logged-in user. I added a test early on specifically
 ## About the architecture, honestly
 This isn't a React SPA talking to a Django API, even though the tech stack badges above might suggest that. Once you're logged in, the whole app — dashboard, car list, every form — is server-rendered Django with Bootstrap. React only handles the landing page and the sign-in card (`frontend/src/pages/Index.tsx` and `frontend/src/components/LoginCard.tsx`); it's built once with Vite and the compiled output gets served by Django directly.
 
-I went back and forth on whether to keep it this way or "finish the job" and turn it into a real SPA. I decided against it — the CRUD flows here don't need client-side routing or optimistic updates, and building a second UI layer just to say "it's a SPA" would have been complexity for its own sake. There's a `/api/dashboard/` JSON endpoint sitting there unused, which is honestly a leftover from when I was considering that direction. I left it in and documented it rather than pretending it doesn't exist.
+I went back and forth on whether to keep it this way or "finish the job" and turn it into a real SPA. I decided against it — the CRUD flows here don't need client-side routing or optimistic updates, and building a second UI layer just to say "it's a SPA" would have been complexity for its own sake. There used to be a `/api/dashboard/` JSON endpoint sitting here unused, a leftover from when I was considering that direction — I ended up removing it rather than leaving dead code around just in case.
 
 ## Stack
 - **Backend:** Python, Django 4.2
@@ -74,7 +74,6 @@ personal-car-manager/
 - A real permissions layer (owner / driver / fleet manager, instead of just "owner")
 - Recurring expenses and a monthly budget view
 - CSV export for anyone who wants to hand this data to an accountant
-- Either build out `/api/dashboard/` into something real (DRF, docs, an actual consumer) or drop it
 
 ## License
 MIT — see [LICENSE](LICENSE).

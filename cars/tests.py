@@ -52,7 +52,7 @@ class CarViewsTests(TestCase):
         response = self.client.get(reverse("cars:car_detail", args=[self.car.pk]))
         self.assertEqual(response.status_code, 404)
 
-    def test_dashboard_api_returns_user_summary(self):
+    def test_dashboard_totals_add_up_across_all_record_types(self):
         Maintenance.objects.create(
             car=self.car,
             service_name="Oil Change",
@@ -85,13 +85,14 @@ class CarViewsTests(TestCase):
         )
 
         self.client.force_login(self.user)
-        response = self.client.get(reverse("cars:dashboard_api"))
+        response = self.client.get(reverse("cars:dashboard"))
         self.assertEqual(response.status_code, 200)
 
-        payload = response.json()
-        self.assertEqual(payload["summary"]["total_cars"], 1)
-        self.assertEqual(payload["summary"]["total_trip_distance"], 100)
-        self.assertEqual(payload["summary"]["total_trip_income"], 180.0)
+        # net balance = trip income - (expenses + maintenance + fuel)
+        # = 180 - (90 + 120 + 56) = -86
+        self.assertEqual(response.context["total_trip_distance"], 100)
+        self.assertEqual(response.context["total_trip_income"], 180)
+        self.assertEqual(response.context["net_balance"], -86)
 
     def test_user_can_create_car_via_ui_form(self):
         self.client.force_login(self.user)

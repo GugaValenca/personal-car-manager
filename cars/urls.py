@@ -9,7 +9,6 @@ urlpatterns = [
     path("signup/", views.signup, name="signup"),
     path('', views.home, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path("api/dashboard/", views.dashboard_api, name="dashboard_api"),
     path('cars/', views.car_list, name='car_list'),
     path("cars/new/", views.car_create, name="car_create"),
     path('cars/<int:pk>/', views.car_detail, name='car_detail'),
