@@ -25,7 +25,7 @@ class CarViewsTests(TestCase):
         )
 
     def test_logged_user_can_access_car_pages(self):
-        self.client.login(username="owner", password="testpass123")
+        self.client.force_login(self.user)
 
         response = self.client.get(reverse("cars:car_list"))
         self.assertEqual(response.status_code, 200)
@@ -48,7 +48,7 @@ class CarViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_user_cannot_access_another_users_car_detail(self):
-        self.client.login(username="other", password="testpass123")
+        self.client.force_login(self.other_user)
         response = self.client.get(reverse("cars:car_detail", args=[self.car.pk]))
         self.assertEqual(response.status_code, 404)
 
@@ -84,7 +84,7 @@ class CarViewsTests(TestCase):
             trip_type="taxi",
         )
 
-        self.client.login(username="owner", password="testpass123")
+        self.client.force_login(self.user)
         response = self.client.get(reverse("cars:dashboard_api"))
         self.assertEqual(response.status_code, 200)
 
@@ -94,7 +94,7 @@ class CarViewsTests(TestCase):
         self.assertEqual(payload["summary"]["total_trip_income"], 180.0)
 
     def test_user_can_create_car_via_ui_form(self):
-        self.client.login(username="owner", password="testpass123")
+        self.client.force_login(self.user)
         response = self.client.post(
             reverse("cars:car_create"),
             {
@@ -138,7 +138,7 @@ class CarViewsTests(TestCase):
 
     def test_license_plate_must_be_unique(self):
         """Regression test for the missing `unique=True` on Car.license_plate."""
-        self.client.login(username="owner", password="testpass123")
+        self.client.force_login(self.user)
         response = self.client.post(
             reverse("cars:car_create"),
             {
@@ -161,7 +161,7 @@ class CarViewsTests(TestCase):
 
     def test_user_can_create_maintenance_via_ui_form(self):
         """Regression test: Maintenance previously had no non-admin create flow."""
-        self.client.login(username="owner", password="testpass123")
+        self.client.force_login(self.user)
         response = self.client.post(
             reverse("cars:maintenance_create"),
             {
@@ -193,7 +193,7 @@ class CarViewsTests(TestCase):
             fuel_type="gasoline",
             current_mileage=1000,
         )
-        self.client.login(username="owner", password="testpass123")
+        self.client.force_login(self.user)
         response = self.client.get(reverse("cars:maintenance_create"))
         car_choices = list(response.context["form"].fields["car"].queryset)
         self.assertIn(self.car, car_choices)
@@ -213,7 +213,7 @@ class CarViewsTests(TestCase):
                 current_mileage=1000,
             )
 
-        self.client.login(username="owner", password="testpass123")
+        self.client.force_login(self.user)
         response = self.client.get(reverse("cars:car_list"))
         page = response.context["cars"]
         self.assertEqual(page.paginator.count, 26)  # 25 created here + self.car
@@ -286,3 +286,28 @@ class FrontendLoginCsrfTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.json()["ok"])
+
+
+class LoginLockoutTests(TestCase):
+    """Neither /auth/login/ nor /admin/login/ had any brute-force protection.
+    django-axes hooks into authenticate() via AUTHENTICATION_BACKENDS, so a
+    single settings change covers both without touching either view."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(username="owner", password="testpass123")
+
+    def test_repeated_failed_logins_get_locked_out(self):
+        for i in range(5):
+            response = self.client.post(
+                reverse("cars:frontend_login"),
+                data=json.dumps({"username": "owner", "password": "wrong-password"}),
+                content_type="application/json",
+            )
+            print("DIAG wrong", i, response.status_code)
+
+        locked_response = self.client.post(
+            reverse("cars:frontend_login"),
+            data=json.dumps({"username": "owner", "password": "testpass123"}),
+            content_type="application/json",
+        )
+        print("DIAG correct (6th overall)", locked_response.status_code)

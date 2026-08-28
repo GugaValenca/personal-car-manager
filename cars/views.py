@@ -93,7 +93,11 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            # AUTHENTICATION_BACKENDS now has axes.backends.AxesBackend ahead
+            # of ModelBackend, so Django can no longer guess which backend a
+            # freshly-created user (never run through authenticate()) belongs
+            # to - has to be spelled out.
+            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
             messages.success(request, "Account created successfully.")
             return redirect("cars:dashboard")
     else:

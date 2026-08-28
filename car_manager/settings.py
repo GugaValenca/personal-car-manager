@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "axes",
     "cars",
 ]
 
@@ -89,7 +90,20 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "axes.middleware.AxesMiddleware",  # has to stay last
 ]
+
+# django-axes locks out a username+IP pair after too many failed logins.
+# Hooks in through AUTHENTICATION_BACKENDS, so it covers both the custom
+# /auth/login/ endpoint and the built-in /admin/login/ without touching
+# either view - neither had any brute-force protection before this.
+AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesBackend",  # has to stay first
+    "django.contrib.auth.backends.ModelBackend",
+]
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = 1  # hour
+AXES_LOCKOUT_PARAMETERS = ["ip_address", "username"]
 
 ROOT_URLCONF = "car_manager.urls"
 
